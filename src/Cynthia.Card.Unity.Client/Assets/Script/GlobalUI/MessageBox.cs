@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Alsein.Utilities.IO;
+using System.Threading.Tasks;
 
 public class MessageBox : MonoBehaviour
 {
@@ -10,8 +10,9 @@ public class MessageBox : MonoBehaviour
     public Text MessageText;
     public Text YesText;
     public Text NoText;
-    private IAsyncDataEndPoint stream = new AsyncDataEndPoint();
 
+
+    /*
     public Task<bool> Show(string title,string message,string yes = "确定",string no = "取消")
     {
         gameObject.SetActive(true);
@@ -30,5 +31,5 @@ public class MessageBox : MonoBehaviour
     {
         gameObject.SetActive(false);
         stream.SendAsync<bool>(false);
-    }
+    }*/
 }
