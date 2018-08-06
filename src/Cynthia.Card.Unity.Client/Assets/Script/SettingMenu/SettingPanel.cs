@@ -68,7 +68,7 @@ public class SettingPanel : MonoBehaviour {
     {
         PlayerPrefs.SetInt("musicVolum", volum);
         musicVolum = volum;
-        AudioMixer.SetFloat("volum",(float)((musicVolum*8)-80));
+        AudioMixer.SetFloat("musicVolum",(float)((musicVolum*8)-80));
     }
 
     //设置音效大小
@@ -94,10 +94,12 @@ public class SettingPanel : MonoBehaviour {
         isCloseSound = ((isClose == 0) ? true : false);
         if (isCloseSound)
         {
-            AudioSource.GetComponent<AudioSource>().Pause();
+            //AudioSource.GetComponent<AudioSource>().Pause();
+            AudioMixer.SetFloat("volum", -80);
             return;
         }
-        AudioSource.GetComponent<AudioSource>().Play();
+        //AudioSource.GetComponent<AudioSource>().Play();
+        AudioMixer.SetFloat("volum", 0);
     }
 
     //设置全屏

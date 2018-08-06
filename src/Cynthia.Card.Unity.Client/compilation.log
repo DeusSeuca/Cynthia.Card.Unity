@@ -1,0 +1,23 @@
+********************************************************************************
+*                              2018年8月6日 23:51:13                              *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 4.0.4.230
+Unity version: 2018.2.1f1
+Platform: Windows
+Target assembly: Assembly-CSharp.dll
+Project directory: E:\program\unity3d\Cynthia.Card.Unity\src\Cynthia.Card.Unity.Client
+Target profile directory: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\lib\mono\unityjit
+Unity Mono executable: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe
+Compiler: Microsoft C# 7.3 (2.8.0.62830)
+
+- Compilation ------------------------------------------------
+
+Process: E:\program\unity3d\Cynthia.Card.Unity\src\Cynthia.Card.Unity.Client\CSharp70Support\Roslyn\csc.exe
+Arguments: -noconfig @Temp/UnityTempFile-06af775acda7c6f46967376558589e25
+Exit code: 0
+Elapsed time: 0.99 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
