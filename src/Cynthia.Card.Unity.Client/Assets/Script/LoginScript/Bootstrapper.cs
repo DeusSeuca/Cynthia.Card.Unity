@@ -20,9 +20,11 @@ public class Bootstrapper : MonoBehaviour {
                 return;
             var builder = new ContainerBuilder();
             builder.Register(x => DependencyResolver.Container).SingleInstance();
-            builder.RegisterType<HubConnectionBuilder>().SingleInstance();
-            builder.Register(x => DependencyResolver.Container.Resolve<HubConnectionBuilder>().WithUrl("http://cynthia.ovyno.com/hub/gwent").Build()).SingleInstance();
+            //builder.RegisterType<HubConnectionBuilder>().SingleInstance();
+            //builder.Register(x => DependencyResolver.Container.Resolve<HubConnectionBuilder>().WithUrl("http://cynthia.ovyno.com/hub/gwent").Build()).SingleInstance();
             //builder.Populate(DependencyResolver.Container.Resolve<HubConnectionBuilder>().WithUrl("http://cynthia.ovyno.com/hub/gwent").Services);
+            var hubConnectionBuilder = new HubConnectionBuilder().WithUrl("http://cynthia.ovyno.com/hub/gwent");
+            builder.Populate(hubConnectionBuilder.Services);
             var assembly = Assembly.GetExecutingAssembly();
             var types = assembly.GetTypes();
             var services = types.Where(x => x.Name.EndsWith("Service") && x.IsClass && !x.IsAbstract && !x.IsGenericTypeDefinition);
