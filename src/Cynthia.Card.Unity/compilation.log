@@ -1,0 +1,35 @@
+********************************************************************************
+*                              2018年8月19日 5:51:03                              *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 4.0.4.230
+Unity version: 2018.2.1f1
+Platform: Windows
+Target assembly: Assembly-CSharp.dll
+Project directory: E:\program\unity3d\Cynthia.Card.Unity\src\Cynthia.Card.Unity
+Target profile directory: UNKNOWN (but it's ok for Unity 2018.1)
+Unity Mono executable: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe
+Compiler: Microsoft C# 7.3 (2.8.0.62830)
+
+- Compilation ------------------------------------------------
+
+Process: E:\program\unity3d\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\csc.exe
+Arguments: -noconfig @Temp/UnityTempFile-a915a1ccf8d971b46b60b56f4378f840
+Exit code: 0
+Elapsed time: 2.17 sec
+
+- Output (1 line):
+0: Assets\Script\GamePlay\GameEvent.cs(14,24): warning CS0414: The field 'GameEvent._selectCard' is assigned but its value is never used
+
+- Errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: E:\program\unity3d\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp.dll
+Exit code: 0
+Elapsed time: 0.18 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
