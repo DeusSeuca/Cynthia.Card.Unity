@@ -31,7 +31,9 @@ namespace Cynthia.Card.Client
         public async Task Play(LocalPlayer player)
         {
             _player = player;
-            while(ResponseOperation(await _player.ReceiveAsync()));
+            ResponseOperation(await _player.ReceiveAsync());
+            var playerDragResult = await GameCodeService.GetPlayerDrag();
+            ResponseOperation(await _player.ReceiveAsync());
         }
 
         //-----------------------------------------------------------------------

@@ -3,37 +3,41 @@ using System.Collections.Generic;
 using Cynthia.Card.Client;
 using Cynthia.Card;
 using UnityEngine;
+using System.Linq;
+using Alsein.Utilities;
 
 public class GameCardsControl : MonoBehaviour
 {
-    public GameObject MyHand;
-    public GameObject MyRow1;
-    public GameObject MyRow2;
-    public GameObject MyRow3;
-    public GameObject MyLeader;
+    public CardsPosition MyHand;
+    public CardsPosition MyRow1;
+    public CardsPosition MyRow2;
+    public CardsPosition MyRow3;
+    public LeaderCard MyLeader;
     //
-    public GameObject EnemyHand;
-    public GameObject EnemyRow1;
-    public GameObject EnemyRow2;
-    public GameObject EnemyRow3;
-    public GameObject EnemyLeader;
+    public CardsPosition EnemyHand;
+    public CardsPosition EnemyRow1;
+    public CardsPosition EnemyRow2;
+    public CardsPosition EnemyRow3;
+    public LeaderCard EnemyLeader;
     //暂时用不到
-    public GameObject MyCemtery;
-    public GameObject MyDeck;
-    public GameObject EnemyCemtery;
-    public GameObject EnemyDeck;
+    public CardsPosition MyCemtery;
+    public CardsPosition MyDeck;
+    public CardsPosition EnemyCemtery;
+    public CardsPosition EnemyDeck;
     //预制体
     public GameObject CardObj;
     //---------------------------
     public void SetCardsInfo(GameInfomation gameInfomation)
     {
-        MyHand.GetComponent<CardsModify>();
-        MyRow1.GetComponent<CardsModify>();
-        MyRow2.GetComponent<CardsModify>();
-        MyRow3.GetComponent<CardsModify>();
-        EnemyHand.GetComponent<CardsModify>();
-        EnemyRow1.GetComponent<CardsModify>();
-        EnemyRow2.GetComponent<CardsModify>();
-        EnemyRow3.GetComponent<CardsModify>();
+        MyHand.SetCards(gameInfomation.MyHandCard);
+        MyRow1.SetCards(gameInfomation.MyPlace[0]);
+        MyRow2.SetCards(gameInfomation.MyPlace[1]);
+        MyRow3.SetCards(gameInfomation.MyPlace[2]);
+        EnemyHand.SetCards(gameInfomation.EnemyHandCard);
+        EnemyRow1.SetCards(gameInfomation.EnemyPlace[0]);
+        EnemyRow2.SetCards(gameInfomation.EnemyPlace[1]);
+        EnemyRow3.SetCards(gameInfomation.EnemyPlace[2]);
+        MyLeader.SetLeader(gameInfomation.MyLeader,gameInfomation.IsMyLeader);
+        EnemyLeader.SetLeader(gameInfomation.EnemyLeader,gameInfomation.IsEnemyLeader);
     }
 }

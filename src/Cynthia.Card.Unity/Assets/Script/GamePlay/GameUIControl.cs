@@ -38,8 +38,8 @@ public class GameUIControl : MonoBehaviour
         //****关于卡牌相关还没写
         //------------------------------------
         //各种数量
-        MyHandCount.text = gameInfomation.MyHandCard.Count().ToString();
-        EnemyHandCount.text = gameInfomation.EnemyHandCard.Count().ToString();
+        MyHandCount.text = (gameInfomation.MyHandCard.Count()+(gameInfomation.IsMyLeader?1:0)).ToString();
+        EnemyHandCount.text = (gameInfomation.EnemyHandCard.Count()+(gameInfomation.IsEnemyLeader?1:0)).ToString();
         MyCemeteryCount.text = gameInfomation.MyCemetery.Count().ToString();
         EnemyCemeteryCount.text = gameInfomation.EnemyCemetery.Count().ToString();
         MyDeckCount.text = gameInfomation.MyDeckCount.ToString();

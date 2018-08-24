@@ -5,12 +5,14 @@ using UnityEngine.SceneManagement;
 using Autofac;
 using Cynthia.Card.Client;
 using Cynthia.Card;
+using System.Threading.Tasks;
 
 public class GameCode : MonoBehaviour
 {
     public GameUIControl GameUIControl;
     public GameResultControl GameResultControl;
     public GameCardsControl GameCardsControl;
+    public GameEvent GameEvent;
 
     private void Start()
     {
@@ -23,5 +25,9 @@ public class GameCode : MonoBehaviour
     public void LeaveGame()
     {
         SceneManager.LoadScene("Game");
+    }
+    public Task<RoundInfo> GetPlayerDrag()
+    {
+        return GameEvent.GetPlayerDrag();
     }
 }

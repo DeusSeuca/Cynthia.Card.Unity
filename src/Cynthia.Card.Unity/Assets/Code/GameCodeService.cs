@@ -33,5 +33,9 @@ namespace Cynthia.Card.Client
         {
             _code.GetComponent<GameCode>().GameResultControl.ShowGameResult(gameResult);
         }
+        public Task<RoundInfo> GetPlayerDrag()
+        {
+            return _code.GetComponent<GameCode>().GameEvent.GetPlayerDrag();
+        }
     }
 }
