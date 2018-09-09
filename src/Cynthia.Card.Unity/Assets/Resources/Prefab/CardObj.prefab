@@ -328,6 +328,7 @@ GameObject:
   - component: {fileID: 114145167863805860}
   - component: {fileID: 114372749201630046}
   - component: {fileID: 65330893177408100}
+  - component: {fileID: 114970867273618066}
   m_Layer: 0
   m_Name: CardObj
   m_TagString: Untagged
@@ -505,7 +506,7 @@ MonoBehaviour:
   CardBorder: {fileID: 114191258175786320}
   CardImg: {fileID: 114218188555386122}
   CardBack: {fileID: 114979593135165332}
-  CardStatus: {fileID: 114647011381517864}
+  CardStatus: {fileID: 1732800186790504}
   LockIcon: {fileID: 1058392752604098}
   SpyingIcon: {fileID: 1065811661149522}
   Resilience: {fileID: 1006322254982040}
@@ -605,7 +606,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: dcc77a28287f2064f8513607ae178cc1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e5e25077a7d34894b88ce4526f8c1ded, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 0
@@ -632,7 +633,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 526fbcc6fc8d9c14ca3193ad65679580, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4bf4bd24dfdedbf4db06cbebc5083eaa, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -706,11 +707,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CardShowInfo: {fileID: 114145167863805860}
-  ResetPoint: {x: 0, y: 0, z: 0}
-  zPosition: 0
+  ResetPoint: {x: -5.25, y: -0}
   IsCanDrag: 1
   IsCanSelect: 1
   IsDrag: 0
+  IsUse: 0
+  Speed: 30
   CardUseInfo: 4
 --- !u!114 &114373612130709896
 MonoBehaviour:
@@ -744,7 +746,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: 4
 --- !u!114 &114393611110627154
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -854,7 +856,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.11764706, g: 0.11764706, b: 0.11764706, a: 0.8627451}
+  m_Color: {r: 0.11764706, g: 0.11764706, b: 0.11764706, a: 0.6666667}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -950,6 +952,18 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114970867273618066
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1906824597552920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28f1561801ece7244a48336136eaf3cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 2
 --- !u!114 &114979593135165332
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1362,7 +1376,7 @@ RectTransform:
   m_GameObject: {fileID: 1601938897063966}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 224367335709513720}
   m_RootOrder: 0

@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using Autofac;
 using UnityEngine;
 using Cynthia.Card.Client;
+using Cynthia.Card;
 
 public class TestButton : MonoBehaviour
 {
-    public async void Click()
+    public GameObject TestItem;
+    public void Click()
     {
-        if(await DependencyResolver.Container.Resolve<GlobalUIService>().YNMessageBox("退出游戏?","是否退出游戏"))
-        {
-            Debug.Log("退出了");
-            return;
-        }
-        Debug.Log("取消了");
+        var item = TestItem.GetComponent<GameEvent>();
+        item.GetCardFrom(RowPosition.EnemyDeck, RowPosition.EnemyStay, 0, new GameCard() { IsCardBack = true });
+        item.SetCardTo(RowPosition.EnemyStay,0,RowPosition.EnemyRow1,0);
     }
 }

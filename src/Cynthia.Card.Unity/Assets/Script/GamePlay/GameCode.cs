@@ -12,7 +12,9 @@ public class GameCode : MonoBehaviour
     public GameUIControl GameUIControl;
     public GameResultControl GameResultControl;
     public GameCardsControl GameCardsControl;
+    public GameCardShowControl GameCardShowControl;
     public GameEvent GameEvent;
+    public Transform GameScale;
 
     private void Start()
     {
@@ -25,9 +27,5 @@ public class GameCode : MonoBehaviour
     public void LeaveGame()
     {
         SceneManager.LoadScene("Game");
-    }
-    public Task<RoundInfo> GetPlayerDrag()
-    {
-        return GameEvent.GetPlayerDrag();
     }
 }

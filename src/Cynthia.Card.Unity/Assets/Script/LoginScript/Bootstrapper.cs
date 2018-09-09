@@ -19,20 +19,8 @@ public class Bootstrapper : MonoBehaviour {
         var builder = new ContainerBuilder();
         builder.Register(x => DependencyResolver.Container).SingleInstance();
         builder.RegisterType<HubConnectionBuilder>().SingleInstance();
-        builder.Register(x => DependencyResolver.Container.Resolve<HubConnectionBuilder>().WithUrl("http://cynthia.ovyno.com/hub/gwent").Build()).SingleInstance();
-        //builder.Register(x => DependencyResolver.Container.Resolve<HubConnectionBuilder>().WithUrl("http://localhost:5000/hub/gwent").Build()).SingleInstance();
-        /*var hubConnectionBuilder = new HubConnectionBuilder().WithUrl("http://cynthia.ovyno.com/hub/gwent");
-        try
-        {
-            var s = "";
-            hubConnectionBuilder.Services.Select(x => x.ServiceType.Name).ForAll(x=>s+=x+",");
-            TestText.text = s;
-            builder.Populate(hubConnectionBuilder.Services);
-        }
-        catch (Exception e)
-        {
-            //TestText.text = e.GetType().Name;
-        }*/
+        //builder.Register(x => DependencyResolver.Container.Resolve<HubConnectionBuilder>().WithUrl("http://cynthia.ovyno.com/hub/gwent").Build()).SingleInstance();
+        builder.Register(x => DependencyResolver.Container.Resolve<HubConnectionBuilder>().WithUrl("http://localhost:5000/hub/gwent").Build()).SingleInstance();
 
         var assembly = Assembly.GetExecutingAssembly();
         var types = assembly.GetTypes();

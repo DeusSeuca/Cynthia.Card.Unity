@@ -4,56 +4,62 @@ using UnityEngine;
 using Cynthia.Card;
 using Alsein.Utilities;
 using System.Linq;
+using System.Threading.Tasks;
 
 public class CardsPosition : MonoBehaviour
 {
-    public static GameObject DragCard = null;
     public GameObject CardPrefab;
-    public float Size = 1.75f;
-    public float Width = 14f;
-    public bool IsCanDrag;//其中卡牌是否可拖动
-    public bool IsCanSelect;//其中卡牌是否可被选中
-    public int MaxCards = 9;
-    private int temCardIndex;
+    public float XSize;
+    public float YSize;
+    public float Width;
+    public bool IsCanDrag;
+    public bool IsCanSelect;
+    public bool IsLock;//是否锁定住一端
+    public bool IsCoverage;//是否靠前的卡牌覆盖靠后的卡牌
+    public bool IsStayRow;//是否是特殊排(待出现)
+    public int MaxCards;
+    public RowPosition Id;
+    private int _temCardIndex;
 
     private void Start()
     {
         ResetCards();
-        temCardIndex = -1;
+        _temCardIndex = -1;
     }
     public bool IsTem()
     {
-        return temCardIndex >= 0;
+        return _temCardIndex >= 0;
     }
     public void AddTemCard(GameCard cardInfo,int index)
     {
-        if (index == temCardIndex)//如果临时卡存在
+        if (index == _temCardIndex)//如果临时卡存在
         {
             return;//返回
         }
         if (IsTem())
         {
-            RemoveCard(temCardIndex);//删除现有临时卡
+            RemoveCard(_temCardIndex);//删除现有临时卡
         }
         if (cardInfo == null)
         {
-            temCardIndex = -1;
+            _temCardIndex = -1;
             return;
         }
-        temCardIndex = index;
+        _temCardIndex = index;
         var newCard = Instantiate(CardPrefab);
         newCard.GetComponent<CardShowInfo>().CurrentCore = cardInfo;
-        newCard.GetComponent<CardShowInfo>().SetCard();
+        newCard.GetComponent<CardShowInfo>().CurrentCore.IsGray = true;
         newCard.GetComponent<CardMoveInfo>().IsCanSelect = false;
-        newCard.GetComponent<CardShowInfo>().SetGray(true);
+        newCard.GetComponent<CardShowInfo>().SetCard();
         newCard.transform.SetParent(transform);
-        newCard.transform.SetSiblingIndex(temCardIndex);
+        newCard.transform.SetSiblingIndex(_temCardIndex);
+        newCard.transform.localPosition = new Vector3((IsLock?0:(-(transform.childCount - 1f) * XSize / 2f)) + index * XSize, -YSize * index, -0.1f - 0.01f * index);
         ResetCards();
     }
 
     public void ResetCards()//将所有卡牌定位到应有的位置
     {
-        var size = Size;
+        var size = XSize;
         var count = transform.childCount;
         if ((count - 1f) * size > Width)
         {
@@ -63,8 +69,11 @@ public class CardsPosition : MonoBehaviour
         {
             var item = transform.GetChild(i).gameObject.GetComponent<CardMoveInfo>();
             item.IsCanDrag = IsCanDrag;
-            item.transform.localScale = Vector3.one;
-            item.SetResetPoint(new Vector3(-(count - 1f) * size / 2f + i * size, 0, -0.1f - 0.01f * i));
+            item.IsCanSelect = IsCanSelect;
+            if(!item.IsUse)//如果没使用的话,恢复
+                item.transform.localScale = Vector3.one;
+            item.Speed = 5f;
+            item.SetResetPoint(new Vector3((IsLock?0:(-(count - 1f) * size / 2f)) + i * size, -YSize*i,IsCoverage?(-0.1f-0.01f*(count-i-1)):(-0.1f - 0.01f * i)));
         }
     }
     public void CardsCanDrag(bool isCanDrag)
@@ -85,7 +94,7 @@ public class CardsPosition : MonoBehaviour
             transform.GetChild(i).gameObject.GetComponent<CardMoveInfo>().IsCanSelect = IsCanSelect;
         }
     }
-    public void AddCard(CardMoveInfo card, int cardIndex)
+    public void AddCard(CardMoveInfo card, int cardIndex,bool isAwait = true)
     {
         if (IsTem())
         {//添加卡牌的时候删除临时卡
@@ -93,12 +102,30 @@ public class CardsPosition : MonoBehaviour
         }
         card.IsCanDrag = IsCanDrag;
         var source = card.transform.parent.gameObject.GetComponent<CardsPosition>();
+        var leader = card.transform.parent.gameObject.GetComponent<LeaderCard>();
         card.transform.SetParent(transform);
         card.transform.SetSiblingIndex(cardIndex == -1 ? transform.childCount : cardIndex);
-        card.transform.localScale = Vector3.one;
+        card.IsCanDrag = IsCanDrag;
         if (source != null)
             source.ResetCards();
+        if (leader != null)
+            leader.TrueCard = null;
         ResetCards();
+        if (isAwait)
+        {
+            card.IsCanSelect = false;
+            card.IsUse = true;
+            if (IsStayRow)
+                return;
+            card.transform.localScale = Vector3.one * 1.2f;
+            card.ZPosition -= 2f;
+        }
+        else
+        {
+            card.transform.localScale = Vector3.one;
+            card.IsCanSelect = IsCanSelect;
+            card.IsUse = false;
+        }
     }
     public void RemoveCard(int cardIndex)
     {
@@ -120,13 +147,20 @@ public class CardsPosition : MonoBehaviour
     {
         Cards.ForAll(x=>CreateCard(x,-1));
     }
+    public int GetCardCount()
+    {
+        return transform.childCount;
+    }
     public void SetCards(IEnumerable<GameCard> Cards)
     {
         Cards.Select(x=> 
         {
             var newCard = Instantiate(CardPrefab);
             newCard.GetComponent<CardShowInfo>().CurrentCore = x;
-            newCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[x.CardIndex].CardUseInfo;
+            if (x.IsCardBack == false)
+            {
+                newCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[x.CardIndex].CardUseInfo;
+            }
             newCard.GetComponent<CardShowInfo>().SetCard();
             return newCard.GetComponent<CardMoveInfo>();
         }).To(SetCards);

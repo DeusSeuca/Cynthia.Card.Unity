@@ -32,24 +32,44 @@ public class GameUIControl : MonoBehaviour
     public GameObject EnemyCrownLeft;//
     public GameObject EnemyCrownRight;//
     //----------------------------------
+    public GameObject MyPass;
+    public GameObject EnemyPass;
 
-    public void SetGameInfo(GameInfomation gameInfomation)
+    public void SetPointInfo(GameInfomation gameInfomation)
     {
-        //****关于卡牌相关还没写
-        //------------------------------------
-        //各种数量
-        MyHandCount.text = (gameInfomation.MyHandCard.Count()+(gameInfomation.IsMyLeader?1:0)).ToString();
-        EnemyHandCount.text = (gameInfomation.EnemyHandCard.Count()+(gameInfomation.IsEnemyLeader?1:0)).ToString();
-        MyCemeteryCount.text = gameInfomation.MyCemetery.Count().ToString();
-        EnemyCemeteryCount.text = gameInfomation.EnemyCemetery.Count().ToString();
+        MyAllPoint.color = ConstInfo.NormalColor;
+        EnemyAllPoint.color = ConstInfo.NormalColor;
+        MyRow1Point.text = gameInfomation.MyRow1Point.ToString();
+        MyRow2Point.text = gameInfomation.MyRow2Point.ToString();
+        MyRow3Point.text = gameInfomation.MyRow3Point.ToString();
+        EnemyRow1Point.text = gameInfomation.EnemyRow1Point.ToString();
+        EnemyRow2Point.text = gameInfomation.EnemyRow2Point.ToString();
+        EnemyRow3Point.text = gameInfomation.EnemyRow3Point.ToString();
+        var myAllPoint = (gameInfomation.MyRow1Point + gameInfomation.MyRow2Point + gameInfomation.MyRow3Point);
+        var enemyAllPoint = (gameInfomation.EnemyRow1Point + gameInfomation.EnemyRow2Point + gameInfomation.EnemyRow3Point);
+        MyAllPoint.text = myAllPoint.ToString();
+        EnemyAllPoint.text = enemyAllPoint.ToString();
+        if (myAllPoint > enemyAllPoint)
+            MyAllPoint.color = ConstInfo.WinColor;
+        else if(myAllPoint < enemyAllPoint)
+            EnemyAllPoint.color = ConstInfo.WinColor;
+    }
+    public void SetCountInfo(GameInfomation gameInfomation)
+    {
+        MyHandCount.text = gameInfomation.MyHandCount.ToString();
+        EnemyHandCount.text = gameInfomation.EnemyHandCount.ToString();
+        MyCemeteryCount.text = gameInfomation.MyCemeteryCount.ToString();
+        EnemyCemeteryCount.text = gameInfomation.EnemyCemeteryCount.ToString();
         MyDeckCount.text = gameInfomation.MyDeckCount.ToString();
         EnemyDeckCount.text = gameInfomation.EnemyDeckCount.ToString();
-        //------------------------------------
-        //名称
-        EnemyName.text = gameInfomation.EnemyName;
-        MyName.text = gameInfomation.MyName;
-        //-------------------------------------
-        //皇冠图标
+    }
+    public void SetPassInfo(GameInfomation gameInfomation)
+    {
+        MyPass.SetActive(gameInfomation.IsMyPlayersPass);
+        EnemyPass.SetActive(gameInfomation.IsEnemyPlayersPass);
+    }
+    public void SetWinCountInfo(GameInfomation gameInfomation)
+    {
         if (gameInfomation.MyWinCount == 0)
         {
             MyCrownLeft.SetActive(false);
@@ -80,5 +100,29 @@ public class GameUIControl : MonoBehaviour
             EnemyCrownLeft.SetActive(true);
             EnemyCrownRight.SetActive(true);
         }
+    }
+    public void SetNameInfo(GameInfomation gameInfomation)
+    {
+        EnemyName.text = gameInfomation.EnemyName;
+        MyName.text = gameInfomation.MyName;
+    }
+    //全部的信息
+    public void SetGameInfo(GameInfomation gameInfomation)
+    {
+        //****关于卡牌相关在另一边写了
+        //-----------------------------------
+        //pass
+        SetPassInfo(gameInfomation);
+        //各种点数
+        SetPointInfo(gameInfomation);
+        //------------------------------------
+        //各种数量
+        SetCountInfo(gameInfomation);
+        //------------------------------------
+        //名称
+        SetNameInfo(gameInfomation);
+        //-------------------------------------
+        //皇冠图标
+        SetWinCountInfo(gameInfomation);
     }
 }

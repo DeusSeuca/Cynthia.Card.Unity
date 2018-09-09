@@ -11,37 +11,62 @@ public class LeaderCard : MonoBehaviour
     public GameObject CardPrefab;
     public bool IsCanSelect;
     public bool IsCanDrag;
+    public GameObject TrueCard;
+    public GameObject GrayCard;
     public void SetLeader(GameCard Leader,bool isCardUse)
     {
         IsCardUse = isCardUse;
         DestroyAllChild();
-        var newCard = Instantiate(CardPrefab);
-        newCard.GetComponent<CardShowInfo>().CurrentCore = Leader;
-        newCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[Leader.CardIndex].CardUseInfo;
-        newCard.GetComponent<CardShowInfo>().SetCard();
-        newCard.transform.SetParent(transform);
-        newCard.transform.localPosition = new Vector3(0, 0, -0.01f);
-        newCard.transform.localScale = Vector3.one;
-        newCard.GetComponent<CardMoveInfo>().IsCanDrag = IsCanDrag;
-        newCard.GetComponent<CardMoveInfo>().IsCanSelect = IsCanSelect;
+        if (isCardUse)
+        {
+            var newCard = Instantiate(CardPrefab);
+            newCard.GetComponent<CardShowInfo>().CurrentCore = Leader;//设定卡牌信息
+            newCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[Leader.CardIndex].CardUseInfo;//设置卡牌信息
+            newCard.GetComponent<CardShowInfo>().SetCard();//展现卡牌样式
+            newCard.transform.SetParent(transform);//设置卡牌的父物体
+            newCard.transform.localPosition = new Vector3(0, 0, -0.01f);//设置卡牌的坐标
+            newCard.transform.localScale = Vector3.one;//设置缩放
+            newCard.GetComponent<CardMoveInfo>().SetResetPoint(new Vector3(0, 0, -0.01f));//设置坐标
+            newCard.GetComponent<CardMoveInfo>().IsCanDrag = IsCanDrag;//设置是否可拖
+            newCard.GetComponent<CardMoveInfo>().IsCanSelect = IsCanSelect;//是否可选
+            TrueCard = newCard;
+        }
+        //--------------------------------
+        var grayCard = Instantiate(CardPrefab);
+        grayCard.GetComponent<CardShowInfo>().CurrentCore = Leader;//设定卡牌信息
+        grayCard.GetComponent<CardShowInfo>().CurrentCore.IsGray = true;
+        grayCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[Leader.CardIndex].CardUseInfo;//设置卡牌信息
+        grayCard.GetComponent<CardShowInfo>().SetCard();//展现卡牌样式
+        grayCard.transform.SetParent(transform);//设置卡牌的父物体
+        grayCard.transform.localPosition = new Vector3(0, 0, 0);//设置卡牌的坐标
+        grayCard.transform.localScale = Vector3.one;//设置缩放
+        grayCard.GetComponent<CardMoveInfo>().SetResetPoint(new Vector3(0, 0, 0));//设置坐标
+        grayCard.GetComponent<CardMoveInfo>().IsCanDrag = false;//设置是否可拖
+        grayCard.GetComponent<CardMoveInfo>().IsCanSelect = false;//是否可选
+        GrayCard = grayCard;
+        if(isCardUse)
+            grayCard.SetActive(false);
+    }
+    public void AutoSet()
+    {
+        if (TrueCard == null && GrayCard != null)
+            GrayCard.SetActive(true);
     }
     public void SetCanDrag(bool isCanDrag)
     {
         IsCanDrag = isCanDrag;
-        var count = transform.childCount;
-        for (var i = 0; i < count; i++)
-        {
-            transform.GetChild(i).gameObject.GetComponent<CardMoveInfo>().IsCanDrag = IsCanDrag;
-        }
+        if (TrueCard != null)
+            TrueCard.GetComponent<CardMoveInfo>().IsCanDrag = IsCanDrag;
+        else
+            IsCanDrag = false;
     }
     public void SetCanSelect(bool isCanSelect)
     {
         IsCanSelect = isCanSelect;
-        var count = transform.childCount;
-        for (var i = 0; i < count; i++)
-        {
-            transform.GetChild(i).gameObject.GetComponent<CardMoveInfo>().IsCanSelect = IsCanSelect;
-        }
+        if (TrueCard != null)
+            TrueCard.GetComponent<CardMoveInfo>().IsCanSelect = isCanSelect;
+        else
+            IsCanSelect = false;
     }
     private void DestroyAllChild()
     {
@@ -49,14 +74,6 @@ public class LeaderCard : MonoBehaviour
         for(int i = count; i > 0; i--)
         {
             Destroy(transform.GetChild(i).gameObject);
-        }
-    }
-    private IEnumerable<Transform> GetAllChild()
-    {
-        var count = transform.childCount;
-        for (int i = count; i > 0; i--)
-        {
-            yield return transform.GetChild(i);
         }
     }
 }

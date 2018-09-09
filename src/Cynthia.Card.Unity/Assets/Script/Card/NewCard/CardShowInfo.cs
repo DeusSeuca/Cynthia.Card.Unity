@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 public class CardShowInfo : MonoBehaviour
 {
+
     public GameCard CurrentCore { get=>_currentCore; set
         {
             _currentCore = value;
@@ -25,7 +26,7 @@ public class CardShowInfo : MonoBehaviour
     public Image CardBorder;
     public Image CardImg;
     public Image CardBack;
-    public Image CardStatus;
+    public GameObject CardStatus;
     public GameObject LockIcon;//锁定
     public GameObject SpyingIcon;//间谍
     public GameObject Resilience;//坚韧
@@ -54,17 +55,15 @@ public class CardShowInfo : MonoBehaviour
     }
     public void SetGray(bool IsGray)
     {
-        CardStatus.gameObject.SetActive(IsGray);
+        CardStatus.SetActive(IsGray);
     }
     public void SetCard()
     {
         //设置卡牌是否灰
-        if (CurrentCore.IsGray)
-            CardStatus.gameObject.SetActive(false);
-        if (!CurrentCore.IsGray)
-            CardStatus.gameObject.SetActive(true);
+        CardStatus.SetActive(CurrentCore.IsGray);
         //如果卡牌是背面,设置背面并结束
-        if(CurrentCore.IsCardBack)
+        CardBack.gameObject.SetActive(false);
+        if (CurrentCore.IsCardBack)
         {
             if (CurrentCore.DeckFaction == Faction.Monsters)
                 CardBack.sprite = MonstersBack;
@@ -76,6 +75,7 @@ public class CardShowInfo : MonoBehaviour
                 CardBack.sprite = ScoiaTaelBack;
             if (CurrentCore.DeckFaction == Faction.Skellige)
                 CardBack.sprite = SkelligeBack;
+            CardBack.gameObject.SetActive(true);
             return;
         }
         if (CurrentCore.CardInfo.Group == Group.Gold || CurrentCore.CardInfo.Group == Group.Leader)
