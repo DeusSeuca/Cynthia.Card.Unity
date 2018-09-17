@@ -59,6 +59,10 @@ public class CardShowInfo : MonoBehaviour
     }
     public void SetCard()
     {
+        var use = this.GetComponent<CardMoveInfo>();
+        if (use != null&&!CurrentCore.IsCardBack)
+            use.CardUseInfo = CurrentCore.CardInfo.CardUseInfo;
+        CardImg.sprite = Resources.Load<Sprite>("Sprites/Cards/"+CurrentCore.CardIndex);
         //设置卡牌是否灰
         CardStatus.SetActive(CurrentCore.IsGray);
         //如果卡牌是背面,设置背面并结束

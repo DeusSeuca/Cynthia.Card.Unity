@@ -13,7 +13,9 @@ public class GameCode : MonoBehaviour
     public GameResultControl GameResultControl;
     public GameCardsControl GameCardsControl;
     public GameCardShowControl GameCardShowControl;
+    public BigRoundControl BigRoundControl;
     public GameEvent GameEvent;
+    public Animator MyRoundShow;
     public Transform GameScale;
 
     private void Start()

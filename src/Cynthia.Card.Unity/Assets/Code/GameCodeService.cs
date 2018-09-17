@@ -20,7 +20,59 @@ namespace Cynthia.Card.Client
             _code = GameObject.Find("Code");
         }
         //-------------------------------------------------------------------------------------------
+        public void SelectCard(int index)
+        {
+            _code.GetComponent<GameCode>().GameCardShowControl.SelectCard(index);
+        }
+        public void ClickCard(int index)
+        {
+            _code.GetComponent<GameCode>().GameCardShowControl.ClickCard(index);
+        }
+        //--------------------
+        public void BigRoundShowPoint(BigRoundInfomation data)
+        {
+            _code.GetComponent<GameCode>().BigRoundControl.ShowPoint(data);
+        }
+        public void BigRoundSetMessage(string message)
+        {
+            _code.GetComponent<GameCode>().BigRoundControl.SetMessage(message);
+        }
+        public void BigRoundShowClose()
+        {
+            _code.GetComponent<GameCode>().BigRoundControl.CloseBigRound();
+        }
+        //--------------------
+        public void MulliganStart(IList<GameCard> cards, int total)//调度界面
+        {
+            _code.GetComponent<GameCode>().GameCardShowControl.MulliganStart(cards, total);
+        }
+        //调度结束
+        public void MulliganEnd()
+        {
+            _code.GetComponent<GameCode>().GameCardShowControl.MulliganEnd();
+        }
+        //更新信息(需要更改),动画之类的
+        public void MulliganData(int index, GameCard card)
+        {
+            _code.GetComponent<GameCode>().GameCardShowControl.MulliganData(index, card);
+        }
+        //获取调度信息
+        public void GetMulliganInfo(LocalPlayer player)
+        {
+            _code.GetComponent<GameCode>().GameCardShowControl.GetMulliganInfo(player);
+        }
+        //----------------------------------
+        //回合开始动画
+        public void RoundStartShow()
+        {
+            _code.GetComponent<GameCode>().MyRoundShow.Play("RoundShow");
+        }
+        //-------------------------------------------------------------------------------------------
         //更新数据的方法们
+        public void SetMulliganInfo(GameInfomation gameInfomation)
+        {
+            _code.GetComponent<GameCode>().GameUIControl.SetMulliganInfo(gameInfomation);
+        }
         public void SetAllInfo(GameInfomation gameInfomation)//更新全部数据
         {
             _code.GetComponent<GameCode>().GameUIControl.SetGameInfo(gameInfomation);
@@ -103,11 +155,11 @@ namespace Cynthia.Card.Client
         }
         public void SetCardTo(RowPosition rowIndex,int cardIndex,RowPosition tagetRowIndex,int tagetCardIndex)
         {
-            _code.GetComponent<GameEvent>().SetCardTo(rowIndex, cardIndex, tagetRowIndex, tagetCardIndex);
+            _code.GetComponent<GameCode>().GameEvent.SetCardTo(rowIndex, cardIndex, tagetRowIndex, tagetCardIndex);
         }
         public void GetCardFrom(RowPosition getPosition,RowPosition tagetPosition,int tagetCardIndex,GameCard cardInfo)
         {
-            _code.GetComponent<GameEvent>().GetCardFrom(getPosition, tagetPosition, tagetCardIndex, cardInfo);
+            _code.GetComponent<GameCode>().GameEvent.GetCardFrom(getPosition, tagetPosition, tagetCardIndex, cardInfo);
         }
         //-------------------------------------------------
         public Transform GetGameScale()

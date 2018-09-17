@@ -34,6 +34,8 @@ public class GameUIControl : MonoBehaviour
     //----------------------------------
     public GameObject MyPass;
     public GameObject EnemyPass;
+    public Text MyShowMessage;//
+    public Text EnemyShowMessage;//
 
     public void SetPointInfo(GameInfomation gameInfomation)
     {
@@ -65,8 +67,21 @@ public class GameUIControl : MonoBehaviour
     }
     public void SetPassInfo(GameInfomation gameInfomation)
     {
-        MyPass.SetActive(gameInfomation.IsMyPlayersPass);
-        EnemyPass.SetActive(gameInfomation.IsEnemyPlayersPass);
+        if (gameInfomation.IsMyPlayerPass)
+            MyShowMessage.text = "放弃跟牌";
+        if (gameInfomation.IsEnemyPlayerPass)
+            EnemyShowMessage.text = "放弃跟牌";
+        MyPass.SetActive(gameInfomation.IsMyPlayerPass);
+        EnemyPass.SetActive(gameInfomation.IsEnemyPlayerPass);
+    }
+    public void SetMulliganInfo(GameInfomation gameInfomation)
+    {
+        //if (gameInfomation.IsMyPlayerPass)
+        //MyShowMessage.text = "放弃跟牌";
+        if (gameInfomation.IsEnemyPlayerMulligan)
+            EnemyShowMessage.text = "敌方正在调度手牌";
+        //MyPass.SetActive(gameInfomation.IsMyPlayerMulligan);
+        EnemyPass.SetActive(gameInfomation.IsEnemyPlayerMulligan);
     }
     public void SetWinCountInfo(GameInfomation gameInfomation)
     {
@@ -124,5 +139,8 @@ public class GameUIControl : MonoBehaviour
         //-------------------------------------
         //皇冠图标
         SetWinCountInfo(gameInfomation);
+        //-------------------------------------
+        //调度
+        SetMulliganInfo(gameInfomation);
     }
 }

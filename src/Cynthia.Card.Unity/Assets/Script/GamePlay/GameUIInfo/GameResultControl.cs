@@ -66,7 +66,7 @@ public class GameResultControl : MonoBehaviour
             Round2.SetActive(false);
         if (gameResult.RoundCount < 1)
             Round1.SetActive(false);
-        if (gameResult.GameStatu == GameResultInfomation.GameStatus.Win)
+        if (gameResult.GameStatu == GameStatus.Win)
         {
             BackgroundMain.color = ConstInfo.WinBgColor;
             BackgroundLeft.sprite = GameWinBgLeft;
@@ -74,7 +74,7 @@ public class GameResultControl : MonoBehaviour
             TitleResult.text = "胜利";
             TitleResult.color = ConstInfo.MyColor;
         }
-        if (gameResult.GameStatu == GameResultInfomation.GameStatus.Lose)
+        if (gameResult.GameStatu == GameStatus.Lose)
         {
             BackgroundMain.color = ConstInfo.LoseBgColor;
             BackgroundLeft.sprite = GameLoseBgLeft;
@@ -82,7 +82,7 @@ public class GameResultControl : MonoBehaviour
             TitleResult.text = "失败";
             TitleResult.color = ConstInfo.EnemyColor;
         }
-        if (gameResult.GameStatu == GameResultInfomation.GameStatus.Draw)
+        if (gameResult.GameStatu == GameStatus.Draw)
         {
             BackgroundMain.color = ConstInfo.DrawBgColor;
             BackgroundLeft.sprite = GameDrawBgLeft;

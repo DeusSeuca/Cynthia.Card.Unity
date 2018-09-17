@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CanDrop : MonoBehaviour
 {
-    public int Id = -1;
+    public RowPosition Id;
     private bool _isCanDrop;
     public CardsPosition CardsPosition;
     public bool IsRowDrop;

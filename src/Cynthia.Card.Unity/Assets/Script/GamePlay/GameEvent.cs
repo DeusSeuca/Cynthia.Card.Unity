@@ -205,7 +205,7 @@ public class GameEvent : MonoBehaviour
             {//法术卡的放置
                 if(DropTaget.CardsPosition!=null)
                     DropTaget.CardsPosition.AddCard(dragCard, 0);
-                if (DropTaget.Id == -3)
+                if (DropTaget.Id == RowPosition.MyCemetery)
                 {
                     CardMove(dragCard, MyCemetery.transform);
                 }
@@ -213,7 +213,7 @@ public class GameEvent : MonoBehaviour
             }
             if (_myUseCard != null)
                 MyCardEffectEnd();
-            if (DropTaget.Id != -3)
+            if (DropTaget.Id != RowPosition.MyCemetery)
             {
                 _myUseCard = dragCard;
                 _myUseCard.IsUse = true;
@@ -228,9 +228,12 @@ public class GameEvent : MonoBehaviour
                 new RoundInfo()
                 {
                     HandCardIndex = handIndex,
-                    RowIndex = DropTaget.Id,
-                    CardIndex = index,
-                    IsPass = false
+                    CardLocation = new CardLocation()
+                    {
+                        RowPosition = DropTaget.Id,
+                        CardIndex = index
+                    },
+                    IsPass = false,
                 }
             );
             //-----------------------------------------------------------------------------------
@@ -273,7 +276,7 @@ public class GameEvent : MonoBehaviour
         {
             var cards = onObjects.Where(x => x.GetComponent<CardMoveInfo>()!=null);//获取物体集合中的所有卡牌
             if (cards.Count() == 0) SelectCard = null;
-            else SelectCard = cards.First().GetComponent<CardMoveInfo>();
+            else SelectCard = cards.OrderBy(x=>x.transform.position.z).First().GetComponent<CardMoveInfo>();
             if (SelectCard == null)
             {
                 var coin = onObjects.Where(x => x.GetComponent<PassCoin>() != null);
@@ -414,18 +417,18 @@ public class GameEvent : MonoBehaviour
         showInfo.CurrentCore = cardInfo;
         showInfo.SetCard();
         //这里是弃牌
-        if (enemyRoundInfo.RowIndex == -3)
+        if (enemyRoundInfo.CardLocation.RowPosition == RowPosition.EnemyCemetery)
         {
             CardMove(card, EnemyCemetery);
             return;
         }
         //------------------------------------------------------------
         //以下是正常出牌
-        var enemyDrop = AllCanDrop.Single(x => x.Id == enemyRoundInfo.RowIndex);
+        var enemyDrop = AllCanDrop.First(x => x.Id == enemyRoundInfo.CardLocation.RowPosition);
         //获得卡牌
         if (enemyDrop.IsRowDrop)
         {
-            enemyDrop.CardsPosition.AddCard(card, enemyRoundInfo.CardIndex);
+            enemyDrop.CardsPosition.AddCard(card, enemyRoundInfo.CardLocation.CardIndex);
         }
         else
         {//法术卡的放置

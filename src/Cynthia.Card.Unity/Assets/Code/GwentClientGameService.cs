@@ -71,6 +71,37 @@ namespace Cynthia.Card.Client
                     );
                     break;
                 //------------------------------------------------------------------------
+                case ServerOperationType.MulliganStart:
+                    GameCodeService.MulliganStart(arguments[0].ToType<IList<GameCard>>(), arguments[1].ToType<int>());
+                    break;
+                case ServerOperationType.MulliganData:
+                    GameCodeService.MulliganData(arguments[0].ToType<int>(), arguments[1].ToType<GameCard>());
+                    break;
+                case ServerOperationType.GetMulliganInfo:
+                    GameCodeService.GetMulliganInfo(_player);
+                    break;
+                case ServerOperationType.MulliganEnd:
+                    GameCodeService.MulliganEnd();
+                    break;
+                case ServerOperationType.SetMulliganInfo:
+                    //
+                    GameCodeService.SetMulliganInfo(arguments[0].ToType<GameInfomation>());
+                    break;
+                //----------------
+                case ServerOperationType.RemindYouRoundStart:
+                    GameCodeService.RoundStartShow();
+                    break;
+                //-----------------------------------------------------------
+                case ServerOperationType.BigRoundShowPoint:
+                    GameCodeService.BigRoundShowPoint(arguments[0].ToType<BigRoundInfomation>());
+                    break;
+                case ServerOperationType.BigRoundSetMessage:
+                    GameCodeService.BigRoundSetMessage(arguments[0].ToType<string>());
+                    break;
+                case ServerOperationType.BigRoundShowClose:
+                    GameCodeService.BigRoundShowClose();
+                    break;
+                //------------------------------------------------------------------------
                 case ServerOperationType.SetCoinInfo:
                     GameCodeService.SetCoinInfo(arguments[0].ToType<bool>());
                     break;
