@@ -11,7 +11,7 @@ public class TestButton : MonoBehaviour
     public void Click()
     {
         var item = TestItem.GetComponent<GameEvent>();
-        item.GetCardFrom(RowPosition.EnemyDeck, RowPosition.EnemyStay, 0, new GameCard() { IsCardBack = true });
+        item.GetCardFrom(RowPosition.EnemyDeck, RowPosition.EnemyStay, 0, new CardStatus() { IsCardBack = true });
         item.SetCardTo(RowPosition.EnemyStay,0,RowPosition.EnemyRow1,0);
     }
 }

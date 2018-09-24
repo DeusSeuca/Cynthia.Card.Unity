@@ -13,7 +13,7 @@ public class LeaderCard : MonoBehaviour
     public bool IsCanDrag;
     public GameObject TrueCard;
     public GameObject GrayCard;
-    public void SetLeader(GameCard Leader,bool isCardUse)
+    public void SetLeader(CardStatus Leader,bool isCardUse)
     {
         IsCardUse = isCardUse;
         DestroyAllChild();

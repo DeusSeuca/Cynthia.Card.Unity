@@ -31,9 +31,9 @@ public class GameCardShowControl : MonoBehaviour
     private string useCardTitle { get; set; }
     private UseCardShowType NowUseMenuType;
     //---------------------------------
-    public IList<GameCard> UseCardList;
-    public IList<GameCard> MyCemetery;
-    public IList<GameCard> EnemyCemetery;
+    public IList<CardStatus> UseCardList;
+    public IList<CardStatus> MyCemetery;
+    public IList<CardStatus> EnemyCemetery;
     //
     private IAsyncDataSender sender;
     private IAsyncDataReceiver receiver;
@@ -111,7 +111,7 @@ public class GameCardShowControl : MonoBehaviour
     }
     //------------------------------------------------------------------------------------------------
     //调度开始
-    public void MulliganStart(IList<GameCard> cards,int total)//调度界面
+    public void MulliganStart(IList<CardStatus> cards,int total)//调度界面
     {
         NowMulliganCount = 0;
         NowMulliganTotal = total;
@@ -132,7 +132,7 @@ public class GameCardShowControl : MonoBehaviour
         CardSelectUI.SetActive(false);
     }
     //更新信息(需要更改),动画之类的
-    public void MulliganData(int index, GameCard card)
+    public void MulliganData(int index, CardStatus card)
     {
         UseCardList[index] = card;
         var mCard = CardsContent.GetChild(index).GetComponent<CardShowInfo>();
@@ -167,7 +167,7 @@ public class GameCardShowControl : MonoBehaviour
         CardSelectUI.SetActive(true);
     }
     //------------------------------------------------------------------------------------------------
-    public void SetCardInfo(IList<GameCard> cards)
+    public void SetCardInfo(IList<CardStatus> cards)
     {
         var count = cards.Count;
         RemoveAllChild();
@@ -175,8 +175,6 @@ public class GameCardShowControl : MonoBehaviour
         {
             var card = Instantiate(UICardPrefab).GetComponent<CardShowInfo>();
             card.CurrentCore = cards[i];
-            if (card.CurrentCore.CardInfo == null && !card.CurrentCore.IsCardBack)
-                card.CurrentCore.CardInfo = GwentMap.CardMap[card.CurrentCore.CardIndex];
             card.SetCard();
             card.transform.SetParent(CardsContent, false);
         }

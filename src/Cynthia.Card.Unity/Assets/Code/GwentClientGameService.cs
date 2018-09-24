@@ -35,7 +35,7 @@ namespace Cynthia.Card.Client
                     await _player.SendAsync(UserOperationType.RoundOperate, await GameCodeService.GetPlayerDrag());
                     break;
                 case ServerOperationType.EnemyCardDrag:
-                    GameCodeService.EnemyDrag(arguments[0].ToType<RoundInfo>(),arguments[1].ToType<GameCard>());
+                    GameCodeService.EnemyDrag(arguments[0].ToType<RoundInfo>(),arguments[1].ToType<CardStatus>());
                     break;
                 case ServerOperationType.MyCardEffectEnd:
                     GameCodeService.MyCardEffectEnd();
@@ -67,15 +67,15 @@ namespace Cynthia.Card.Client
                         arguments[0].ToType<RowPosition>(),
                         arguments[1].ToType<RowPosition>(),
                         arguments[2].ToType<int>(),
-                        arguments[3].ToType<GameCard>()
+                        arguments[3].ToType<CardStatus>()
                     );
                     break;
                 //------------------------------------------------------------------------
                 case ServerOperationType.MulliganStart:
-                    GameCodeService.MulliganStart(arguments[0].ToType<IList<GameCard>>(), arguments[1].ToType<int>());
+                    GameCodeService.MulliganStart(arguments[0].ToType<IList<CardStatus>>(), arguments[1].ToType<int>());
                     break;
                 case ServerOperationType.MulliganData:
-                    GameCodeService.MulliganData(arguments[0].ToType<int>(), arguments[1].ToType<GameCard>());
+                    GameCodeService.MulliganData(arguments[0].ToType<int>(), arguments[1].ToType<CardStatus>());
                     break;
                 case ServerOperationType.GetMulliganInfo:
                     GameCodeService.GetMulliganInfo(_player);
@@ -106,10 +106,10 @@ namespace Cynthia.Card.Client
                     GameCodeService.SetCoinInfo(arguments[0].ToType<bool>());
                     break;
                 case ServerOperationType.SetMyCemetery:
-                    GameCodeService.SetMyCemeteryInfo(arguments[0].ToType<List<GameCard>>());
+                    GameCodeService.SetMyCemeteryInfo(arguments[0].ToType<List<CardStatus>>());
                     break;
                 case ServerOperationType.SetEnemyCemetery:
-                    GameCodeService.SetEnemyCemeteryInfo(arguments[0].ToType<List<GameCard>>());
+                    GameCodeService.SetEnemyCemeteryInfo(arguments[0].ToType<List<CardStatus>>());
                     break;
                 case ServerOperationType.SetAllInfo:
                     GameCodeService.SetAllInfo(arguments[0].ToType<GameInfomation>());

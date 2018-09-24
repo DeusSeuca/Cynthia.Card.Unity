@@ -30,7 +30,7 @@ public class CardsPosition : MonoBehaviour
     {
         return _temCardIndex >= 0;
     }
-    public void AddTemCard(GameCard cardInfo,int index)
+    public void AddTemCard(CardStatus cardInfo,int index)
     {
         if (index == _temCardIndex)//如果临时卡存在
         {
@@ -70,7 +70,7 @@ public class CardsPosition : MonoBehaviour
             var item = transform.GetChild(i).gameObject.GetComponent<CardMoveInfo>();
             item.IsCanDrag = IsCanDrag;
             item.IsCanSelect = IsCanSelect;
-            if(!item.IsUse)//如果没使用的话,恢复
+            if(!item.IsOn)//如果没使用的话,恢复
                 item.transform.localScale = Vector3.one;
             item.Speed = 5f;
             item.SetResetPoint(new Vector3((IsLock?0:(-(count - 1f) * size / 2f)) + i * size, -YSize*i,IsCoverage?(-0.1f-0.01f*(count-i-1)):(-0.1f - 0.01f * i)));
@@ -114,7 +114,7 @@ public class CardsPosition : MonoBehaviour
         if (isAwait)
         {
             card.IsCanSelect = false;
-            card.IsUse = true;
+            card.IsOn = true;
             if (IsStayRow)
                 return;
             card.transform.localScale = Vector3.one * 1.2f;
@@ -124,7 +124,7 @@ public class CardsPosition : MonoBehaviour
         {
             card.transform.localScale = Vector3.one;
             card.IsCanSelect = IsCanSelect;
-            card.IsUse = false;
+            card.IsOn = false;
         }
     }
     public void RemoveCard(int cardIndex)
@@ -151,7 +151,7 @@ public class CardsPosition : MonoBehaviour
     {
         return transform.childCount;
     }
-    public void SetCards(IEnumerable<GameCard> Cards)
+    public void SetCards(IEnumerable<CardStatus> Cards)
     {
         Cards.Select(x=> 
         {

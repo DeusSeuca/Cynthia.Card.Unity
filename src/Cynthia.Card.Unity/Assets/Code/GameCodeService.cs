@@ -42,7 +42,7 @@ namespace Cynthia.Card.Client
             _code.GetComponent<GameCode>().BigRoundControl.CloseBigRound();
         }
         //--------------------
-        public void MulliganStart(IList<GameCard> cards, int total)//调度界面
+        public void MulliganStart(IList<CardStatus> cards, int total)//调度界面
         {
             _code.GetComponent<GameCode>().GameCardShowControl.MulliganStart(cards, total);
         }
@@ -52,7 +52,7 @@ namespace Cynthia.Card.Client
             _code.GetComponent<GameCode>().GameCardShowControl.MulliganEnd();
         }
         //更新信息(需要更改),动画之类的
-        public void MulliganData(int index, GameCard card)
+        public void MulliganData(int index, CardStatus card)
         {
             _code.GetComponent<GameCode>().GameCardShowControl.MulliganData(index, card);
         }
@@ -78,11 +78,11 @@ namespace Cynthia.Card.Client
             _code.GetComponent<GameCode>().GameUIControl.SetGameInfo(gameInfomation);
             _code.GetComponent<GameCode>().GameCardsControl.SetCardsInfo(gameInfomation);
         }
-        public void SetMyCemeteryInfo(IList<GameCard> myCemetery)
+        public void SetMyCemeteryInfo(IList<CardStatus> myCemetery)
         {
             _code.GetComponent<GameCode>().GameCardShowControl.MyCemetery = myCemetery;
         }
-        public void SetEnemyCemeteryInfo(IList<GameCard> enemyCemetery)
+        public void SetEnemyCemeteryInfo(IList<CardStatus> enemyCemetery)
         {
             _code.GetComponent<GameCode>().GameCardShowControl.EnemyCemetery = enemyCemetery;
         }
@@ -145,7 +145,7 @@ namespace Cynthia.Card.Client
         {
             _code.GetComponent<GameCode>().GameEvent.RoundEnd();
         }
-        public void EnemyDrag(RoundInfo enemyRoundInfo,GameCard cardInfo)
+        public void EnemyDrag(RoundInfo enemyRoundInfo,CardStatus cardInfo)
         {
             _code.GetComponent<GameCode>().GameEvent.EnemyDrag(enemyRoundInfo,cardInfo);
         }
@@ -157,7 +157,7 @@ namespace Cynthia.Card.Client
         {
             _code.GetComponent<GameCode>().GameEvent.SetCardTo(rowIndex, cardIndex, tagetRowIndex, tagetCardIndex);
         }
-        public void GetCardFrom(RowPosition getPosition,RowPosition tagetPosition,int tagetCardIndex,GameCard cardInfo)
+        public void GetCardFrom(RowPosition getPosition,RowPosition tagetPosition,int tagetCardIndex,CardStatus cardInfo)
         {
             _code.GetComponent<GameCode>().GameEvent.GetCardFrom(getPosition, tagetPosition, tagetCardIndex, cardInfo);
         }

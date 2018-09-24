@@ -9,17 +9,14 @@ using UnityEngine.Events;
 public class CardShowInfo : MonoBehaviour
 {
 
-    public GameCard CurrentCore { get=>_currentCore; set
+    public CardStatus CurrentCore { get=>_currentCore; set
         {
             _currentCore = value;
             if (_currentCore.IsCardBack) return;
-            if (_currentCore.CardInfo == null)
-            {
-                _currentCore.CardInfo = GwentMap.CardMap[_currentCore.CardIndex];
-            }
+            _currentCore.CardInfo = GwentMap.CardMap[_currentCore.CardIndex];
         }
     }
-    private GameCard _currentCore;
+    private CardStatus _currentCore;
     //---------------------------
     public Text Strength;
     public Image FactionIcon;
@@ -49,7 +46,7 @@ public class CardShowInfo : MonoBehaviour
     public Sprite SkelligeBack;//群岛
     public Sprite NilfgaardBack;//帝国
 
-    public CardShowInfo(GameCard card)
+    public CardShowInfo(CardStatus card)
     {
         CurrentCore = card;
     }

@@ -20,7 +20,22 @@ public class CardMoveInfo : MonoBehaviour
     public bool IsCanDrag = true;//是否能拖动
     public bool IsCanSelect = true;
     public bool IsDrag = false;//是否正在拖动
-    public bool IsUse = false;//是否正在使用
+    public bool IsOn
+    {
+        get => _isOn; set
+        {
+            _isOn = value;
+            if (_isOn)
+                transform.localScale = Vector3.one;
+            else
+            {
+                var p = transform.parent.GetComponent<CardsPosition>();
+                if (p != null)
+                    p.ResetCards();
+            }
+        }
+    }//是否处于抬起状态(锁定变大)
+    private bool _isOn = false;
     public float Speed = 35f;
     public CardUseInfo CardUseInfo = CardUseInfo.AnyPlace;
     /*

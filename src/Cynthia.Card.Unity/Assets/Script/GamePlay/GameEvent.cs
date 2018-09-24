@@ -116,9 +116,8 @@ public class GameEvent : MonoBehaviour
     {
         //某些信息
     }
-    /// <summary>
-    /// 当前正在拖拽的卡牌
-    /// </summary>
+
+    //当前正在拖拽的卡牌
     public static CardMoveInfo DragCard
     {
         get=>_dragCard;
@@ -136,9 +135,8 @@ public class GameEvent : MonoBehaviour
             _dragCard.ZPosition -= 3f;
         }
     }
-    /// <summary>
-    /// 当前选择
-    /// </summary>
+
+    //当前选择
     public static CardMoveInfo SelectCard
     {
         get => _selectCard;
@@ -160,10 +158,10 @@ public class GameEvent : MonoBehaviour
             _selectCard.transform.localScale = new Vector3(1.05f, 1.05f, 1);
             _selectCard.ZPosition -= 1f;
         }
-    }//---------------------------------------------------------------------------------
-    /// <summary>
-    /// 鼠标落下
-    /// </summary>
+    }
+    //---------------------------------------------------------------------------------
+
+    //鼠标落下
     private void OnMouseDown()
     {
         if (IsSelectCoin)
@@ -176,9 +174,8 @@ public class GameEvent : MonoBehaviour
         CurrentPlace = DragCard.CardUseInfo;
         SelectCard = null;
     }
-    /// <summary>
-    /// 鼠标抬起
-    /// </summary>
+
+    //鼠标抬起
     private void OnMouseUp()
     {
         if (IsOnCoin)//此方法会被改到其他地方
@@ -216,7 +213,7 @@ public class GameEvent : MonoBehaviour
             if (DropTaget.Id != RowPosition.MyCemetery)
             {
                 _myUseCard = dragCard;
-                _myUseCard.IsUse = true;
+                _myUseCard.IsOn = true;
             }
             else
             //Debug.Log($"将卡牌【{handIndex}】拖拽到了【Id:{DropTaget.Id}】位置");
@@ -242,6 +239,8 @@ public class GameEvent : MonoBehaviour
         DragCard = null;
         CurrentPlace = CardUseInfo.ReSet;
     }
+
+    //右键点击之类的
     private void OnMouseOver()
     {
         if (Input.GetMouseButtonDown(1))
@@ -264,10 +263,8 @@ public class GameEvent : MonoBehaviour
             }
         }
     }
-
-    /// <summary>
-    /// 每一帧
-    /// </summary>
+    
+    //每一帧
     private void Update()
     {
         //if (IsOnCoin)按住硬币会执行的
@@ -323,11 +320,13 @@ public class GameEvent : MonoBehaviour
             //Debug.Log($"将卡牌拖到了该排第{index}个位置");//##################卡牌虚化效果
         }
     }
+
     private Vector3 GetRelativePosition(CanDrop dropTaget)
     {
         Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit);
         return dropTaget.transform.InverseTransformPoint(hit.point);
     }
+
     private int GetDropIndex(Vector3 position,CardsPosition container)
     {
         if (container == null)
@@ -341,18 +340,16 @@ public class GameEvent : MonoBehaviour
         index = index > count ? count : index;
         return (int)index;
     }
-    /// <summary>
-    /// 获得当前鼠标穿过的所有物体
-    /// </summary>
+
+    //获得当前鼠标穿过的所有物体
     private IEnumerable<GameObject> GetMouseAllRaycast()
     {
         var ray1 = Camera.main.ScreenPointToRay(Input.mousePosition);
         var ray = new Ray(ray1.origin, ray1.direction * 100000);
         return  Physics.RaycastAll(ray).Select(x=>x.collider.gameObject);
     }
-    /// <summary>
-    /// 获得某个物体在父物体中的位置
-    /// </summary>
+
+    //获得某个物体在父物体中的位置
     private int GetIndex(Transform obj)
     {
         var p = obj.parent;
@@ -366,9 +363,8 @@ public class GameEvent : MonoBehaviour
         }
         return 0;
     }
-    /// <summary>
-    /// 将某个卡牌丢到墓地或者卡组
-    /// </summary>
+
+    //将某个卡牌丢到墓地或者卡组
     public void CardMove(CardMoveInfo card,Transform taget)
     {
         var source = card.transform.parent.gameObject.GetComponent<CardsPosition>();
@@ -380,10 +376,10 @@ public class GameEvent : MonoBehaviour
         if (source != null)
             source.ResetCards();
     }
-
     //------------------------------------------------------------------------------
-
     //以下为给服务端调用的方法
+
+    //展示将一些卡丢到墓地
     public void ShowCardsToCemetery(GameCardsPart cards)
     {
         cards.MyRow1Cards.Select(x => MyRow1.CardsPosition.transform.GetChild(x).GetComponent<CardMoveInfo>())
@@ -401,7 +397,7 @@ public class GameEvent : MonoBehaviour
     }
 
     //显示对手出的牌
-    public void EnemyDrag(RoundInfo enemyRoundInfo,GameCard cardInfo)
+    public void EnemyDrag(RoundInfo enemyRoundInfo, CardStatus cardInfo)
     {
         var card = default(CardMoveInfo);
         //当前排的第几个位置
@@ -411,9 +407,6 @@ public class GameEvent : MonoBehaviour
         else
             card = EnemyHand.transform.GetChild(enemyRoundInfo.HandCardIndex).gameObject.GetComponent<CardMoveInfo>();
         var showInfo = card.GetComponent<CardShowInfo>();
-        if (cardInfo.CardInfo == null)
-            cardInfo.CardInfo = GwentMap.CardMap[cardInfo.CardIndex];
-        card.CardUseInfo = cardInfo.CardInfo.CardUseInfo;
         showInfo.CurrentCore = cardInfo;
         showInfo.SetCard();
         //这里是弃牌
@@ -437,7 +430,7 @@ public class GameEvent : MonoBehaviour
         if (_enemyUseCard != null)//如果敌人的已经有使用的卡牌
             EnemyCardEffectEnd();//结束卡牌的效果
         _enemyUseCard = card;//将当前卡牌设置为目前使用卡牌
-        _enemyUseCard.IsUse = true;//将卡牌设置成"使用中卡牌"
+        _enemyUseCard.IsOn = true;//将卡牌设置成"使用中卡牌"
     }
 
     //让玩家使用一个卡牌,或者pass
@@ -453,8 +446,9 @@ public class GameEvent : MonoBehaviour
         MyLeader.SetCanDrag(false);
         return result;
     }
+
     //创建一张卡牌
-    public void GetCardFrom(RowPosition createPosition,RowPosition taget,int index,GameCard cardInfo)
+    public void GetCardFrom(RowPosition createPosition,RowPosition taget,int index, CardStatus cardInfo)
     {
         var position = default(Transform);
         switch (createPosition)
@@ -494,7 +488,7 @@ public class GameEvent : MonoBehaviour
     {
         if (_myUseCard == null)
             return;
-        _myUseCard.IsUse = false;
+        _myUseCard.IsOn = false;
         var type = _myUseCard.CardUseInfo;
         if (type == CardUseInfo.AnyPlace || type == CardUseInfo.MyPlace || type == CardUseInfo.EnemyPlace)
         {
@@ -516,7 +510,7 @@ public class GameEvent : MonoBehaviour
     {
         if (_enemyUseCard == null)
             return;
-        _enemyUseCard.IsUse = false;
+        _enemyUseCard.IsOn = false;
         var type = _enemyUseCard.CardUseInfo;
         if (type == CardUseInfo.AnyPlace || type == CardUseInfo.MyPlace || type == CardUseInfo.EnemyPlace)
         {
