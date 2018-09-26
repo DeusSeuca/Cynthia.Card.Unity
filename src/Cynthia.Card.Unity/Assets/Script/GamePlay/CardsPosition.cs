@@ -94,7 +94,7 @@ public class CardsPosition : MonoBehaviour
             transform.GetChild(i).gameObject.GetComponent<CardMoveInfo>().IsCanSelect = IsCanSelect;
         }
     }
-    public void AddCard(CardMoveInfo card, int cardIndex,bool isAwait = true)
+    public void AddCard(CardMoveInfo card, int cardIndex)//,bool isAwait = true)
     {
         if (IsTem())
         {//添加卡牌的时候删除临时卡
@@ -111,6 +111,7 @@ public class CardsPosition : MonoBehaviour
         if (leader != null)
             leader.TrueCard = null;
         ResetCards();
+        /*
         if (isAwait)
         {
             card.IsCanSelect = false;
@@ -125,7 +126,7 @@ public class CardsPosition : MonoBehaviour
             card.transform.localScale = Vector3.one;
             card.IsCanSelect = IsCanSelect;
             card.IsOn = false;
-        }
+        }*/
     }
     public void RemoveCard(int cardIndex)
     {

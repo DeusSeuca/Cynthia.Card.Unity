@@ -24,11 +24,16 @@ public class CardMoveInfo : MonoBehaviour
     {
         get => _isOn; set
         {
-            _isOn = value;
-            if (_isOn)
-                transform.localScale = Vector3.one;
+            if (value)
+            {
+                transform.localScale = Vector3.one * 1.15f;
+                if (!_isOn) ZPosition -= 2;
+                _isOn = value;
+            }
             else
             {
+                if (_isOn) ZPosition += 2;
+                _isOn = value;
                 var p = transform.parent.GetComponent<CardsPosition>();
                 if (p != null)
                     p.ResetCards();

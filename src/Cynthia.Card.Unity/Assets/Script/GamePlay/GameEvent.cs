@@ -204,7 +204,7 @@ public class GameEvent : MonoBehaviour
                     DropTaget.CardsPosition.AddCard(dragCard, 0);
                 if (DropTaget.Id == RowPosition.MyCemetery)
                 {
-                    CardMove(dragCard, MyCemetery.transform);
+                    CardMoveBack(dragCard, MyCemetery.transform);
                 }
                 //Debug.Log("放置了法术卡");
             }
@@ -271,7 +271,7 @@ public class GameEvent : MonoBehaviour
         var onObjects = GetMouseAllRaycast();//获取鼠标穿透的所有物体
         if (DragCard == null)//如果没有在拖拽的卡牌
         {
-            var cards = onObjects.Where(x => x.GetComponent<CardMoveInfo>()!=null);//获取物体集合中的所有卡牌
+            var cards = onObjects.Where(x => x.GetComponent<CardMoveInfo>()!=null&&!x.GetComponent<CardMoveInfo>().IsOn);//获取物体集合中的所有卡牌
             if (cards.Count() == 0) SelectCard = null;
             else SelectCard = cards.OrderBy(x=>x.transform.position.z).First().GetComponent<CardMoveInfo>();
             if (SelectCard == null)
@@ -365,7 +365,7 @@ public class GameEvent : MonoBehaviour
     }
 
     //将某个卡牌丢到墓地或者卡组
-    public void CardMove(CardMoveInfo card,Transform taget)
+    public void CardMoveBack(CardMoveInfo card,Transform taget)
     {
         var source = card.transform.parent.gameObject.GetComponent<CardsPosition>();
         card.transform.SetParent(taget);
@@ -376,24 +376,107 @@ public class GameEvent : MonoBehaviour
         if (source != null)
             source.ResetCards();
     }
+
+    //------------------------------------------------------------------------------
+    //一些小方法
+    public CardMoveInfo GetCard(CardLocation location) => AllCardsPosition.Single(x => x.Id == location.RowPosition).transform.GetChild(location.CardIndex).GetComponent<CardMoveInfo>();
     //------------------------------------------------------------------------------
     //以下为给服务端调用的方法
+    public void CardMove(MoveCardInfo info)//卡牌移动
+    {
+        var soureCard = default(CardMoveInfo);
+        var tagetRow = default(CardsPosition);
+        switch (info.Soure.RowPosition)//几个特殊的移动原始位置
+        {
+            case RowPosition.MyLeader:
+                if (MyLeader.TrueCard == null) return;
+                soureCard = MyLeader.TrueCard.GetComponent<CardMoveInfo>();
+                break;
+            case RowPosition.EnemyLeader:
+                if (EnemyLeader.TrueCard == null) return;
+                soureCard = EnemyLeader.TrueCard.GetComponent<CardMoveInfo>();
+                break;
+            case RowPosition.MyDeck:
+                soureCard = Instantiate(CardPrefab, MyDeck).GetComponent<CardMoveInfo>();
+                break;
+            case RowPosition.EnemyDeck:
+                soureCard = Instantiate(CardPrefab, EnemyDeck).GetComponent<CardMoveInfo>();
+                break;
+            case RowPosition.MyCemetery:
+                soureCard = Instantiate(CardPrefab, MyCemetery.transform).GetComponent<CardMoveInfo>();
+                break;
+            case RowPosition.EnemyCemetery:
+                soureCard = Instantiate(CardPrefab, EnemyCemetery).GetComponent<CardMoveInfo>();
+                break;
+            case RowPosition.SpecialPlace://这是个错误值
+                break;
+            default:
+                soureCard = GetCard(info.Soure);
+                break;
+        }
+        //以上是来源卡牌
+        if (soureCard == null) return;
+        if(info.Card!=null)
+        {//如果卡牌有额外信息,直接替换掉当前选中的卡牌(例如从牌库,或者手牌抽出的卡牌)
+            soureCard.CardShowInfo.CurrentCore = info.Card;
+            soureCard.CardShowInfo.SetCard();
+        }
+        //------------------------------------------
+        //移动到
+        switch (info.Taget.RowPosition)
+        {
+            case RowPosition.MyDeck:
+                CardMoveBack(soureCard, MyDeck);
+                break;
+            case RowPosition.EnemyDeck:
+                CardMoveBack(soureCard, EnemyDeck);
+                break;
+            case RowPosition.MyCemetery:
+                CardMoveBack(soureCard, MyCemetery.transform);
+                break;
+            case RowPosition.EnemyCemetery:
+                CardMoveBack(soureCard, EnemyCemetery.transform);
+                break;
+            case RowPosition.MyLeader:
+            case RowPosition.EnemyLeader:
+            case RowPosition.SpecialPlace:
+                return;
+            default:
+                tagetRow = AllCardsPosition.Single(x => x.Id == info.Taget.RowPosition);
+                tagetRow.AddCard(soureCard, info.Taget.CardIndex);
+                break;
+        }
+    }
+
+    public void CardOn(CardLocation location)//卡牌抬起
+    {
+        Debug.Log("收到调用,卡牌抬起"+location.RowPosition + "+" + location.CardIndex);
+        var card = GetCard(location);
+        card.IsOn = true;
+    }
+
+    public void CardDown(CardLocation location)//卡牌落下
+    {
+        Debug.Log("收到调用,卡牌落下" + location.RowPosition + "+" + location.CardIndex);
+        var card = GetCard(location);
+        card.IsOn = false;
+    }
 
     //展示将一些卡丢到墓地
     public void ShowCardsToCemetery(GameCardsPart cards)
     {
         cards.MyRow1Cards.Select(x => MyRow1.CardsPosition.transform.GetChild(x).GetComponent<CardMoveInfo>())
-        .ForAll(x => CardMove(x, MyCemetery.transform));
+        .ForAll(x => CardMoveBack(x, MyCemetery.transform));
         cards.MyRow2Cards.Select(x => MyRow2.CardsPosition.transform.GetChild(x).GetComponent<CardMoveInfo>())
-        .ForAll(x => CardMove(x, MyCemetery.transform));
+        .ForAll(x => CardMoveBack(x, MyCemetery.transform));
         cards.MyRow3Cards.Select(x => MyRow3.CardsPosition.transform.GetChild(x).GetComponent<CardMoveInfo>())
-        .ForAll(x => CardMove(x, MyCemetery.transform));
+        .ForAll(x => CardMoveBack(x, MyCemetery.transform));
         cards.EnemyRow1Cards.Select(x => EnemyRow1.CardsPosition.transform.GetChild(x).GetComponent<CardMoveInfo>())
-        .ForAll(x => CardMove(x, EnemyCemetery.transform));
+        .ForAll(x => CardMoveBack(x, EnemyCemetery.transform));
         cards.EnemyRow2Cards.Select(x => EnemyRow2.CardsPosition.transform.GetChild(x).GetComponent<CardMoveInfo>())
-        .ForAll(x => CardMove(x, EnemyCemetery.transform));
+        .ForAll(x => CardMoveBack(x, EnemyCemetery.transform));
         cards.EnemyRow3Cards.Select(x => EnemyRow3.CardsPosition.transform.GetChild(x).GetComponent<CardMoveInfo>())
-        .ForAll(x => CardMove(x, EnemyCemetery.transform));
+        .ForAll(x => CardMoveBack(x, EnemyCemetery.transform));
     }
 
     //显示对手出的牌
@@ -406,13 +489,13 @@ public class GameEvent : MonoBehaviour
             card = EnemyLeader.transform.GetChild(0).gameObject.GetComponent<CardMoveInfo>();
         else
             card = EnemyHand.transform.GetChild(enemyRoundInfo.HandCardIndex).gameObject.GetComponent<CardMoveInfo>();
-        var showInfo = card.GetComponent<CardShowInfo>();
-        showInfo.CurrentCore = cardInfo;
-        showInfo.SetCard();
+        card.GetComponent<CardShowInfo>();
+        card.CardShowInfo.CurrentCore = cardInfo;
+        card.CardShowInfo.SetCard();
         //这里是弃牌
         if (enemyRoundInfo.CardLocation.RowPosition == RowPosition.EnemyCemetery)
         {
-            CardMove(card, EnemyCemetery);
+            CardMoveBack(card, EnemyCemetery);
             return;
         }
         //------------------------------------------------------------
@@ -422,6 +505,7 @@ public class GameEvent : MonoBehaviour
         if (enemyDrop.IsRowDrop)
         {
             enemyDrop.CardsPosition.AddCard(card, enemyRoundInfo.CardLocation.CardIndex);
+            card.IsOn = true;
         }
         else
         {//法术卡的放置
@@ -446,7 +530,7 @@ public class GameEvent : MonoBehaviour
         MyLeader.SetCanDrag(false);
         return result;
     }
-
+    /*
     //创建一张卡牌
     public void GetCardFrom(RowPosition createPosition,RowPosition taget,int index, CardStatus cardInfo)
     {
@@ -472,7 +556,7 @@ public class GameEvent : MonoBehaviour
         card.CurrentCore = cardInfo;
         card.SetCard();
         var tagetRow = AllCardsPosition.Single(x => x.Id == taget);
-        tagetRow.AddCard(card.GetComponent<CardMoveInfo>(),index, false);
+        tagetRow.AddCard(card.GetComponent<CardMoveInfo>(), index); //, false);
     }
 
     //将一张牌移动到另一个地方
@@ -480,10 +564,10 @@ public class GameEvent : MonoBehaviour
     {
         var card = AllCardsPosition.Single(x=>x.Id==rowIndex).transform.GetChild(cardIndex).GetComponent<CardMoveInfo>();
         var tagetRow = AllCardsPosition.Single(x => x.Id == tagetRowIndex);
-        tagetRow.AddCard(card,tagetCardIndex,false);
-    }
+        tagetRow.AddCard(card, tagetCardIndex);//,false);
+    }*/
 
-    //告诉玩家自己卡牌效果结束
+    //告诉玩家自己卡牌效果结束(要被取代)
     public void MyCardEffectEnd()
     {
         if (_myUseCard == null)
@@ -492,20 +576,20 @@ public class GameEvent : MonoBehaviour
         var type = _myUseCard.CardUseInfo;
         if (type == CardUseInfo.AnyPlace || type == CardUseInfo.MyPlace || type == CardUseInfo.EnemyPlace)
         {
-            CardMove(_myUseCard,MyCemetery.transform);
+            CardMoveBack(_myUseCard,MyCemetery.transform);
         }
         else
         {
-            _myUseCard.transform.localScale = Vector3.one;
-            var cardParent = _myUseCard.transform.parent.gameObject.GetComponent<CardsPosition>();
-            _myUseCard.IsCanSelect = cardParent.IsCanSelect;
-            cardParent.ResetCards();
+            //_myUseCard.transform.localScale = Vector3.one;
+            //var cardParent = _myUseCard.transform.parent.gameObject.GetComponent<CardsPosition>();
+            //_myUseCard.IsCanSelect = cardParent.IsCanSelect;
+            //cardParent.ResetCards();
             MyLeader.AutoSet();
         }
         _myUseCard = null;
     }
 
-    //告诉玩家对方卡牌效果结束
+    //告诉玩家对方卡牌效果结束(要被取代)
     public void EnemyCardEffectEnd()
     {
         if (_enemyUseCard == null)
@@ -514,14 +598,14 @@ public class GameEvent : MonoBehaviour
         var type = _enemyUseCard.CardUseInfo;
         if (type == CardUseInfo.AnyPlace || type == CardUseInfo.MyPlace || type == CardUseInfo.EnemyPlace)
         {
-            CardMove(_enemyUseCard,EnemyCemetery);
+            CardMoveBack(_enemyUseCard,EnemyCemetery);
         }
         else
         {
-            _enemyUseCard.transform.localScale = Vector3.one;
-            var cardParent = _enemyUseCard.transform.parent.gameObject.GetComponent<CardsPosition>();
-            _enemyUseCard.IsCanSelect = cardParent.IsCanSelect;
-            cardParent.ResetCards();
+            //_enemyUseCard.transform.localScale = Vector3.one;
+            //var cardParent = _enemyUseCard.transform.parent.gameObject.GetComponent<CardsPosition>();
+            //_enemyUseCard.IsCanSelect = cardParent.IsCanSelect;
+            //cardParent.ResetCards();
             EnemyLeader.AutoSet();
         }
         _enemyUseCard = null;

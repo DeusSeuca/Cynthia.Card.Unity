@@ -1,5 +1,5 @@
 ********************************************************************************
-*                              2018年9月24日 8:54:57                              *
+*                             2018年9月26日 10:22:11                              *
 ********************************************************************************
 CSharpCompilerWrapper.exe version: 4.0.4.230
 Unity version: 2018.2.1f1
@@ -13,9 +13,9 @@ Compiler: Microsoft C# 7.3 (2.8.0.62830)
 - Compilation ------------------------------------------------
 
 Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\csc.exe
-Arguments: -noconfig @Temp/UnityTempFile-8f2621bb95de8e140a7aca718180ecfb
+Arguments: -noconfig @Temp/UnityTempFile-e710d7b1c29180d48a2218d8d17d897f
 Exit code: 0
-Elapsed time: 1.43 sec
+Elapsed time: 1.55 sec
 
 - Output (0 lines):
 
@@ -26,7 +26,245 @@ Elapsed time: 1.43 sec
 Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\pdb2mdb.exe
 Arguments: Temp\Assembly-CSharp.dll
 Exit code: 0
+Elapsed time: 0.19 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+********************************************************************************
+*                             2018年9月26日 10:23:46                              *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 4.0.4.230
+Unity version: 2018.2.1f1
+Platform: Windows
+Target assembly: Unity.TextMeshPro.dll
+Project directory: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity
+Target profile directory: UNKNOWN (but it's ok for Unity 2018.1)
+Unity Mono executable: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe
+Compiler: Microsoft C# 7.3 (2.8.0.62830)
+
+- Compilation ------------------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\csc.exe
+Arguments: -noconfig @Temp/UnityTempFile-6d6770b0aa4d88e49a9ee69057b32d60
+Exit code: 0
+Elapsed time: 1.09 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Unity.TextMeshPro.dll
+Exit code: 0
+Elapsed time: 0.09 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+********************************************************************************
+*                             2018年9月26日 10:23:48                              *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 4.0.4.230
+Unity version: 2018.2.1f1
+Platform: Windows
+Target assembly: Assembly-CSharp.dll
+Project directory: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity
+Target profile directory: UNKNOWN (but it's ok for Unity 2018.1)
+Unity Mono executable: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe
+Compiler: Microsoft C# 7.3 (2.8.0.62830)
+
+- Compilation ------------------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\csc.exe
+Arguments: -noconfig @Temp/UnityTempFile-360296a8735205d42a60394e87f34d30
+Exit code: 0
+Elapsed time: 0.82 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp.dll
+Exit code: 0
+Elapsed time: 0.06 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+********************************************************************************
+*                             2018年9月26日 10:24:35                              *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 4.0.4.230
+Unity version: 2018.2.1f1
+Platform: Windows
+Target assembly: Unity.TextMeshPro.dll
+Project directory: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity
+Target profile directory: UNKNOWN (but it's ok for Unity 2018.1)
+Unity Mono executable: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe
+Compiler: Microsoft C# 7.3 (2.8.0.62830)
+
+- Compilation ------------------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\csc.exe
+Arguments: -noconfig @Temp/UnityTempFile-d8fda36830f536f4bb05d6cb8764d18e
+Exit code: 0
+Elapsed time: 1.44 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Unity.TextMeshPro.dll
+Exit code: 0
 Elapsed time: 0.08 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+********************************************************************************
+*                             2018年9月26日 10:24:35                              *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 4.0.4.230
+Unity version: 2018.2.1f1
+Platform: Windows
+Target assembly: UnityEditor.StandardEvents.dll
+Project directory: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity
+Target profile directory: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\lib\mono\unityjit
+Unity Mono executable: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe
+Compiler: Microsoft C# 7.3 (2.8.0.62830)
+
+- Compilation ------------------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\csc.exe
+Arguments: -noconfig @Temp/UnityTempFile-58a03a7de460e08478e7f9fbd3ec1f18
+Exit code: 0
+Elapsed time: 1.02 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\UnityEditor.StandardEvents.dll
+Exit code: 0
+Elapsed time: 0.07 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+********************************************************************************
+*                             2018年9月26日 10:24:35                              *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 4.0.4.230
+Unity version: 2018.2.1f1
+Platform: Windows
+Target assembly: Unity.PackageManagerUI.Editor.dll
+Project directory: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity
+Target profile directory: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\lib\mono\unityjit
+Unity Mono executable: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe
+Compiler: Microsoft C# 7.3 (2.8.0.62830)
+
+- Compilation ------------------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\csc.exe
+Arguments: -noconfig @Temp/UnityTempFile-97e5382272f7e894a98b4a3799b57cd7
+Exit code: 0
+Elapsed time: 1.17 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Unity.PackageManagerUI.Editor.dll
+Exit code: 0
+Elapsed time: 0.06 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+********************************************************************************
+*                             2018年9月26日 10:24:37                              *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 4.0.4.230
+Unity version: 2018.2.1f1
+Platform: Windows
+Target assembly: Unity.TextMeshPro.Editor.dll
+Project directory: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity
+Target profile directory: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\lib\mono\unityjit
+Unity Mono executable: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe
+Compiler: Microsoft C# 7.3 (2.8.0.62830)
+
+- Compilation ------------------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\csc.exe
+Arguments: -noconfig @Temp/UnityTempFile-4ce8047d5e71231419d003d935efc840
+Exit code: 0
+Elapsed time: 0.92 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Unity.TextMeshPro.Editor.dll
+Exit code: 0
+Elapsed time: 0.06 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+********************************************************************************
+*                             2018年9月26日 10:24:38                              *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 4.0.4.230
+Unity version: 2018.2.1f1
+Platform: Windows
+Target assembly: Assembly-CSharp.dll
+Project directory: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity
+Target profile directory: UNKNOWN (but it's ok for Unity 2018.1)
+Unity Mono executable: C:\Program Files\Unity\Editor\Data\MonoBleedingEdge\bin\mono.exe
+Compiler: Microsoft C# 7.3 (2.8.0.62830)
+
+- Compilation ------------------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\csc.exe
+Arguments: -noconfig @Temp/UnityTempFile-025fba8485001e446b1df3ee9801d78b
+Exit code: 0
+Elapsed time: 0.86 sec
+
+- Output (0 lines):
+
+- Errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: E:\program\unity3d\clone\Cynthia.Card.Unity\src\Cynthia.Card.Unity\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp.dll
+Exit code: 0
+Elapsed time: 0.07 sec
 
 - Output (0 lines):
 

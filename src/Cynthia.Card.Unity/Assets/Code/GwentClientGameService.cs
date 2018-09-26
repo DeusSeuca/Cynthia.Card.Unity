@@ -27,6 +27,7 @@ namespace Cynthia.Card.Client
         //响应指令
         private async Task<bool> ResponseOperation(Operation<ServerOperationType> operation)
         {
+            Debug.Log($"收到了指令{operation.OperationType}");
             var arguments = operation.Arguments.ToArray();
             switch (operation.OperationType)
             {
@@ -52,7 +53,7 @@ namespace Cynthia.Card.Client
                 case ServerOperationType.GameEnd://游戏结束,以及游戏结束信息
                     GameCodeService.ShowGameResult(arguments[0].ToType<GameResultInfomation>());
                     return false;
-                case ServerOperationType.SetCardTo:
+                /*case ServerOperationType.SetCardTo:
                     GameCodeService.SetCardTo
                     (
                         arguments[0].ToType<RowPosition>(), 
@@ -69,6 +70,15 @@ namespace Cynthia.Card.Client
                         arguments[2].ToType<int>(),
                         arguments[3].ToType<CardStatus>()
                     );
+                    break;*/
+                case ServerOperationType.CardMove:
+                    GameCodeService.CardMove(arguments[0].ToType<MoveCardInfo>());
+                    break;
+                case ServerOperationType.CardOn:
+                    GameCodeService.CardOn(arguments[0].ToType<CardLocation>());
+                    break;
+                case ServerOperationType.CardDown:
+                    GameCodeService.CardDown(arguments[0].ToType<CardLocation>());
                     break;
                 //------------------------------------------------------------------------
                 case ServerOperationType.MulliganStart:

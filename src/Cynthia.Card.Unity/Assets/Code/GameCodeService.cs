@@ -121,6 +121,18 @@ namespace Cynthia.Card.Client
             _code.GetComponent<GameCode>().GameUIControl.SetNameInfo(gameInfomation);
         }
         //-------------------------------------------------------------------------------------------
+        public void CardMove(MoveCardInfo info)//卡牌移动
+        {
+            _code.GetComponent<GameCode>().GameEvent.CardMove(info);
+        }
+        public void CardOn(CardLocation location)//卡牌抬起
+        {
+            _code.GetComponent<GameCode>().GameEvent.CardOn(location);
+        }
+        public void CardDown(CardLocation location)//卡牌落下
+        {
+            _code.GetComponent<GameCode>().GameEvent.CardDown(location);
+        }
         public void LeaveGame()//立刻离开游戏,进入主菜单
         {
             _code.GetComponent<GameCode>().LeaveGame();
@@ -153,6 +165,7 @@ namespace Cynthia.Card.Client
         {
             _code.GetComponent<GameCode>().GameEvent.EnemyCardEffectEnd();
         }
+        /*
         public void SetCardTo(RowPosition rowIndex,int cardIndex,RowPosition tagetRowIndex,int tagetCardIndex)
         {
             _code.GetComponent<GameCode>().GameEvent.SetCardTo(rowIndex, cardIndex, tagetRowIndex, tagetCardIndex);
@@ -160,7 +173,7 @@ namespace Cynthia.Card.Client
         public void GetCardFrom(RowPosition getPosition,RowPosition tagetPosition,int tagetCardIndex,CardStatus cardInfo)
         {
             _code.GetComponent<GameCode>().GameEvent.GetCardFrom(getPosition, tagetPosition, tagetCardIndex, cardInfo);
-        }
+        }*/
         //-------------------------------------------------
         public Transform GetGameScale()
         {
