@@ -27,22 +27,16 @@ namespace Cynthia.Card.Client
         //响应指令
         private async Task<bool> ResponseOperation(Operation<ServerOperationType> operation)
         {
-            Debug.Log($"收到了指令{operation.OperationType}");
+            //Debug.Log($"收到了指令{operation.OperationType}");
             var arguments = operation.Arguments.ToArray();
             switch (operation.OperationType)
             {
                 //-----------------------------------------------------------------------
+                case ServerOperationType.Debug:
+                    Debug.Log(arguments[0].ToType<string>());
+                    break;
                 case ServerOperationType.GetDragOrPass:
                     await _player.SendAsync(UserOperationType.RoundOperate, await GameCodeService.GetPlayerDrag());
-                    break;
-                case ServerOperationType.EnemyCardDrag:
-                    GameCodeService.EnemyDrag(arguments[0].ToType<RoundInfo>(),arguments[1].ToType<CardStatus>());
-                    break;
-                case ServerOperationType.MyCardEffectEnd:
-                    GameCodeService.MyCardEffectEnd();
-                    break;
-                case ServerOperationType.EnemyCardEffectEnd://卡牌效果落下
-                    GameCodeService.EnemyCardEffectEnd();
                     break;
                 case ServerOperationType.RoundEnd://回合结束
                     GameCodeService.RoundEnd();
@@ -53,7 +47,17 @@ namespace Cynthia.Card.Client
                 case ServerOperationType.GameEnd://游戏结束,以及游戏结束信息
                     GameCodeService.ShowGameResult(arguments[0].ToType<GameResultInfomation>());
                     return false;
-                /*case ServerOperationType.SetCardTo:
+                /*旧时代指令集
+                case ServerOperationType.EnemyCardDrag:
+                    GameCodeService.EnemyDrag(arguments[0].ToType<RoundInfo>(),arguments[1].ToType<CardStatus>());
+                    break;
+                case ServerOperationType.MyCardEffectEnd:
+                    GameCodeService.MyCardEffectEnd();
+                    break;
+                case ServerOperationType.EnemyCardEffectEnd://卡牌效果落下
+                    GameCodeService.EnemyCardEffectEnd();
+                    break;
+               case ServerOperationType.SetCardTo:
                     GameCodeService.SetCardTo
                     (
                         arguments[0].ToType<RowPosition>(), 

@@ -19,6 +19,7 @@ public class CardMoveInfo : MonoBehaviour
     private float _zPosition;
     public bool IsCanDrag = true;//是否能拖动
     public bool IsCanSelect = true;
+    public bool IsStay = false;
     public bool IsDrag = false;//是否正在拖动
     public bool IsOn
     {
@@ -60,8 +61,9 @@ public class CardMoveInfo : MonoBehaviour
     {
         var tagetText = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         //if(_isMoveToPosition)
-            //_sender1.SendAsync<bool>(true);
+        //_sender1.SendAsync<bool>(true);
         //下一帧应该移动到的位置
+        if (IsStay) return;
         if (IsDrag)
         {
             Speed = 30f;

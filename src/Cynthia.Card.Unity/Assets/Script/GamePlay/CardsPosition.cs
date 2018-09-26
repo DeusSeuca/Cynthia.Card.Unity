@@ -68,6 +68,7 @@ public class CardsPosition : MonoBehaviour
         for (var i = 0; i < count; i++)
         {
             var item = transform.GetChild(i).gameObject.GetComponent<CardMoveInfo>();
+            item.IsStay = false;
             item.IsCanDrag = IsCanDrag;
             item.IsCanSelect = IsCanSelect;
             if(!item.IsOn)//如果没使用的话,恢复

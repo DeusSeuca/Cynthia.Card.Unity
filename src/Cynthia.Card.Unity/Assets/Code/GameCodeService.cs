@@ -149,13 +149,14 @@ namespace Cynthia.Card.Client
         {
             return _code.GetComponent<GameCode>().GameEvent.GetPlayerDrag();
         }
-        public void MyCardEffectEnd()//结束卡牌效果
-        {
-            _code.GetComponent<GameCode>().GameEvent.MyCardEffectEnd();
-        }
         public void RoundEnd()
         {
             _code.GetComponent<GameCode>().GameEvent.RoundEnd();
+        }
+        /*
+        public void MyCardEffectEnd()//结束卡牌效果
+        {
+            _code.GetComponent<GameCode>().GameEvent.MyCardEffectEnd();
         }
         public void EnemyDrag(RoundInfo enemyRoundInfo,CardStatus cardInfo)
         {
@@ -165,7 +166,6 @@ namespace Cynthia.Card.Client
         {
             _code.GetComponent<GameCode>().GameEvent.EnemyCardEffectEnd();
         }
-        /*
         public void SetCardTo(RowPosition rowIndex,int cardIndex,RowPosition tagetRowIndex,int tagetCardIndex)
         {
             _code.GetComponent<GameCode>().GameEvent.SetCardTo(rowIndex, cardIndex, tagetRowIndex, tagetCardIndex);
