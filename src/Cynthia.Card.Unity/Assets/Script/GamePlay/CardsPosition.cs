@@ -68,10 +68,11 @@ public class CardsPosition : MonoBehaviour
         for (var i = 0; i < count; i++)
         {
             var item = transform.GetChild(i).gameObject.GetComponent<CardMoveInfo>();
-            item.IsStay = false;
+            item.IsStay = false;//(在移动的一瞬间会重置掉停滞,但是却没有...)
             item.IsCanDrag = IsCanDrag;
-            item.IsCanSelect = IsCanSelect;
-            if(!item.IsOn)//如果没使用的话,恢复
+            if (item.CardShowInfo.CurrentCore!=null&&!item.CardShowInfo.CurrentCore.IsGray)
+                item.IsCanSelect = IsCanSelect;
+            if(!item.IsOn||item.IsStay)//如果没使用的话,恢复
                 item.transform.localScale = Vector3.one;
             item.Speed = 5f;
             item.SetResetPoint(new Vector3((IsLock?0:(-(count - 1f) * size / 2f)) + i * size, -YSize*i,IsCoverage?(-0.1f-0.01f*(count-i-1)):(-0.1f - 0.01f * i)));
@@ -107,6 +108,8 @@ public class CardsPosition : MonoBehaviour
         card.transform.SetParent(transform);
         card.transform.SetSiblingIndex(cardIndex == -1 ? transform.childCount : cardIndex);
         card.IsCanDrag = IsCanDrag;
+        if (card.IsOn)//测试
+            card.IsOn = true;
         if (source != null)
             source.ResetCards();
         if (leader != null)

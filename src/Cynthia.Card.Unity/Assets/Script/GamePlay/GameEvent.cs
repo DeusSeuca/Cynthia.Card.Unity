@@ -127,12 +127,12 @@ public class GameEvent : MonoBehaviour
             if (_dragCard != null)//放弃当前所拖
             {
                 _dragCard.IsDrag = false;
-                _dragCard.ZPosition += 3f;
+                _dragCard.ZPosition += 2f;
             }
             _dragCard = value;
             if (value == null)return;
             _dragCard.IsDrag = true;
-            _dragCard.ZPosition -= 3f;
+            _dragCard.ZPosition -= 2f;
         }
     }
 
@@ -169,7 +169,7 @@ public class GameEvent : MonoBehaviour
             IsSelectCoin = false;
             IsOnCoin = true;//按住了！
         }
-        if (SelectCard == null||!SelectCard.IsCanDrag) return;
+        if (SelectCard == null||!SelectCard.IsCanDrag||SelectCard.IsStay) return;
         DragCard = SelectCard;
         CurrentPlace = DragCard.CardUseInfo;
         SelectCard = null;
@@ -220,6 +220,7 @@ public class GameEvent : MonoBehaviour
             //----------------------------------------------------------------------------------
             //回应服务器的请求
             DragCard.IsStay = true;
+            ResetAllTem();//
             sender.SendAsync<RoundInfo>
             (
                 new RoundInfo()
@@ -379,7 +380,15 @@ public class GameEvent : MonoBehaviour
 
     //------------------------------------------------------------------------------
     //一些小方法
-    public CardMoveInfo GetCard(CardLocation location) => AllCardsPosition.Single(x => x.Id == location.RowPosition).transform.GetChild(location.CardIndex).GetComponent<CardMoveInfo>();
+    public CardMoveInfo GetCard(CardLocation location)
+    {
+        if (location.RowPosition == RowPosition.MyLeader)
+            return MyLeader.TrueCard.GetComponent<CardMoveInfo>();
+        if (location.RowPosition == RowPosition.EnemyLeader)
+            return EnemyLeader.TrueCard.GetComponent<CardMoveInfo>();
+        return AllCardsPosition.Single(x => x.Id == location.RowPosition)
+            .transform.GetChild(location.CardIndex).GetComponent<CardMoveInfo>();
+    }
     //------------------------------------------------------------------------------
     //以下为给服务端调用的方法
     public void CardMove(MoveCardInfo info)//卡牌移动
