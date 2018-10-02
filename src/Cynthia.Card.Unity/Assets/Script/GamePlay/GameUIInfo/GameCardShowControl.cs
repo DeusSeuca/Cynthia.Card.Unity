@@ -144,7 +144,7 @@ public class GameCardShowControl : MonoBehaviour
         mCard.SetCard();
     }
     //获取调度信息
-    public async void GetMulliganInfo(LocalPlayer player)
+    public async Task GetMulliganInfo(LocalPlayer player)
     {
         NowUseMenuType = UseCardShowType.Mulligan;
         var task = await receiver.ReceiveAsync<int>();
@@ -165,6 +165,12 @@ public class GameCardShowControl : MonoBehaviour
         SetButtonShow(UseButtonShow);
         IsUseMenuShow = true;
         CardSelectUI.SetActive(true);
+    }
+    //------------------------------------------------------------------------------------------------
+    //选择卡牌
+    public async Task SelectMenuCards(MenuSelectCardInfo info, LocalPlayer player)
+    {
+
     }
     //------------------------------------------------------------------------------------------------
     public void SetCardInfo(IList<CardStatus> cards)

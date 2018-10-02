@@ -31,12 +31,27 @@ namespace Cynthia.Card.Client
             var arguments = operation.Arguments.ToArray();
             switch (operation.OperationType)
             {
-                //-----------------------------------------------------------------------
+                //----------------------------------------------------------------------------------
+                //新指令时代
+                case ServerOperationType.SelectMenuCards:
+                    GameCodeService.SelectMenuCards(arguments[0].ToType<MenuSelectCardInfo>(), _player);
+                    break;
+                case ServerOperationType.SelectPlaceCards:
+                    GameCodeService.SelectPlaceCards(arguments[0].ToType<PlaceSelectCardsInfo>(), _player);
+                    break;
+                case ServerOperationType.SelectRow:
+                    GameCodeService.SelectRow(arguments[0].ToType<IList<RowPosition>>(), _player);
+                    break;
+                //-------------------------
+                case ServerOperationType.SetCard:
+                    GameCodeService.SetCard(arguments[0].ToType<CardLocation>(), arguments[1].ToType<CardStatus>());
+                    break;
+                //----------------------------------------------------------------------------------
                 case ServerOperationType.Debug:
                     Debug.Log(arguments[0].ToType<string>());
                     break;
                 case ServerOperationType.GetDragOrPass:
-                    await _player.SendAsync(UserOperationType.RoundOperate, await GameCodeService.GetPlayerDrag());
+                    GameCodeService.GetPlayerDrag(_player);
                     break;
                 case ServerOperationType.RoundEnd://回合结束
                     GameCodeService.RoundEnd();
@@ -47,34 +62,6 @@ namespace Cynthia.Card.Client
                 case ServerOperationType.GameEnd://游戏结束,以及游戏结束信息
                     GameCodeService.ShowGameResult(arguments[0].ToType<GameResultInfomation>());
                     return false;
-                /*旧时代指令集
-                case ServerOperationType.EnemyCardDrag:
-                    GameCodeService.EnemyDrag(arguments[0].ToType<RoundInfo>(),arguments[1].ToType<CardStatus>());
-                    break;
-                case ServerOperationType.MyCardEffectEnd:
-                    GameCodeService.MyCardEffectEnd();
-                    break;
-                case ServerOperationType.EnemyCardEffectEnd://卡牌效果落下
-                    GameCodeService.EnemyCardEffectEnd();
-                    break;
-               case ServerOperationType.SetCardTo:
-                    GameCodeService.SetCardTo
-                    (
-                        arguments[0].ToType<RowPosition>(), 
-                        arguments[1].ToType<int>(),
-                        arguments[2].ToType<RowPosition>(),
-                        arguments[3].ToType<int>()
-                    );
-                    break;
-                case ServerOperationType.GetCardFrom:
-                    GameCodeService.GetCardFrom
-                    (
-                        arguments[0].ToType<RowPosition>(),
-                        arguments[1].ToType<RowPosition>(),
-                        arguments[2].ToType<int>(),
-                        arguments[3].ToType<CardStatus>()
-                    );
-                    break;*/
                 case ServerOperationType.CardMove:
                     GameCodeService.CardMove(arguments[0].ToType<MoveCardInfo>());
                     break;
@@ -85,6 +72,7 @@ namespace Cynthia.Card.Client
                     GameCodeService.CardDown(arguments[0].ToType<CardLocation>());
                     break;
                 //------------------------------------------------------------------------
+                //和调度有关的一切
                 case ServerOperationType.MulliganStart:
                     GameCodeService.MulliganStart(arguments[0].ToType<IList<CardStatus>>(), arguments[1].ToType<int>());
                     break;
@@ -102,10 +90,12 @@ namespace Cynthia.Card.Client
                     GameCodeService.SetMulliganInfo(arguments[0].ToType<GameInfomation>());
                     break;
                 //----------------
+                //显示你的回合到了
                 case ServerOperationType.RemindYouRoundStart:
                     GameCodeService.RoundStartShow();
                     break;
-                //-----------------------------------------------------------
+                //-----------------------------------------------------------------------
+                //小局结束显示结果信息
                 case ServerOperationType.BigRoundShowPoint:
                     GameCodeService.BigRoundShowPoint(arguments[0].ToType<BigRoundInfomation>());
                     break;
@@ -116,6 +106,7 @@ namespace Cynthia.Card.Client
                     GameCodeService.BigRoundShowClose();
                     break;
                 //------------------------------------------------------------------------
+                //SET数值和墓地
                 case ServerOperationType.SetCoinInfo:
                     GameCodeService.SetCoinInfo(arguments[0].ToType<bool>());
                     break;
@@ -149,6 +140,34 @@ namespace Cynthia.Card.Client
                 case ServerOperationType.SetWinCountInfo:
                     GameCodeService.SetWinCountInfo(arguments[0].ToType<GameInfomation>());
                     break;
+                    /*旧时代指令集
+                case ServerOperationType.EnemyCardDrag:
+                    GameCodeService.EnemyDrag(arguments[0].ToType<RoundInfo>(),arguments[1].ToType<CardStatus>());
+                    break;
+                case ServerOperationType.MyCardEffectEnd:
+                    GameCodeService.MyCardEffectEnd();
+                    break;
+                case ServerOperationType.EnemyCardEffectEnd://卡牌效果落下
+                    GameCodeService.EnemyCardEffectEnd();
+                    break;
+               case ServerOperationType.SetCardTo:
+                    GameCodeService.SetCardTo
+                    (
+                        arguments[0].ToType<RowPosition>(), 
+                        arguments[1].ToType<int>(),
+                        arguments[2].ToType<RowPosition>(),
+                        arguments[3].ToType<int>()
+                    );
+                    break;
+                case ServerOperationType.GetCardFrom:
+                    GameCodeService.GetCardFrom
+                    (
+                        arguments[0].ToType<RowPosition>(),
+                        arguments[1].ToType<RowPosition>(),
+                        arguments[2].ToType<int>(),
+                        arguments[3].ToType<CardStatus>()
+                    );
+                    break;*/
             }
             return true;
         }

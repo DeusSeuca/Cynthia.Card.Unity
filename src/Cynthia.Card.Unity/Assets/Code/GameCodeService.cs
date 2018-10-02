@@ -42,6 +42,24 @@ namespace Cynthia.Card.Client
             _code.GetComponent<GameCode>().BigRoundControl.CloseBigRound();
         }
         //--------------------
+        //新纪元系列(选择卡牌,选择场地卡牌,选择行和更新卡牌信息)
+        public void SelectMenuCards(MenuSelectCardInfo info,LocalPlayer player)
+        {
+            _=_code.GetComponent<GameCode>().GameCardShowControl.SelectMenuCards(info, player);
+        }
+        public void SelectPlaceCards(PlaceSelectCardsInfo info, LocalPlayer player)
+        {
+            _=_code.GetComponent<GameCode>().GameEvent.SelectPlaceCards(info, player);
+        }
+        public void SelectRow(IList<RowPosition> rowPart, LocalPlayer player)
+        {
+            _=_code.GetComponent<GameCode>().GameEvent.SelectRow(rowPart,player);
+        }
+        public void SetCard(CardLocation location,CardStatus card)
+        {
+            _code.GetComponent<GameCode>().GameEvent.SetCard(location, card);
+        }
+        //--------------------
         public void MulliganStart(IList<CardStatus> cards, int total)//调度界面
         {
             _code.GetComponent<GameCode>().GameCardShowControl.MulliganStart(cards, total);
@@ -59,7 +77,7 @@ namespace Cynthia.Card.Client
         //获取调度信息
         public void GetMulliganInfo(LocalPlayer player)
         {
-            _code.GetComponent<GameCode>().GameCardShowControl.GetMulliganInfo(player);
+            _=_code.GetComponent<GameCode>().GameCardShowControl.GetMulliganInfo(player);
         }
         //----------------------------------
         //回合开始动画
@@ -145,9 +163,9 @@ namespace Cynthia.Card.Client
         {
             _code.GetComponent<GameCode>().GameResultControl.ShowGameResult(gameResult);
         }
-        public Task<RoundInfo> GetPlayerDrag()//玩家的回合到了
+        public void GetPlayerDrag(LocalPlayer player)//玩家的回合到了
         {
-            return _code.GetComponent<GameCode>().GameEvent.GetPlayerDrag();
+            _= _code.GetComponent<GameCode>().GameEvent.GetPlayerDrag(player);
         }
         public void RoundEnd()
         {

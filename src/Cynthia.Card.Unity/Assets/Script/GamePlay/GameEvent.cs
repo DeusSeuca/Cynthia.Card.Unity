@@ -457,6 +457,21 @@ public class GameEvent : MonoBehaviour
                 break;
         }
     }
+    //------------------------------------------------------------------------------------------------
+    public async Task SelectRow(IList<RowPosition> rowPart, LocalPlayer player)
+    {
+
+    }
+    public async Task SelectPlaceCards(PlaceSelectCardsInfo info, LocalPlayer player)
+    {
+
+    }
+    public void SetCard(CardLocation location,CardStatus card)
+    {
+        var clientCard = GetCard(location);
+        clientCard.CardShowInfo.CurrentCore = card;
+        clientCard.CardShowInfo.SetCard();
+    }
 
     public void CardOn(CardLocation location)//卡牌抬起
     {
@@ -529,7 +544,7 @@ public class GameEvent : MonoBehaviour
     }*/
 
     //让玩家使用一个卡牌,或者pass
-    public async Task<RoundInfo> GetPlayerDrag()//（RoundStart）
+    public async Task GetPlayerDrag(LocalPlayer player)//（RoundStart）
     {
         //解除操作限制,得到情报,增加操作限制,返回结果
         PassCoin.IsCanUse = true;//硬币可用
@@ -539,7 +554,7 @@ public class GameEvent : MonoBehaviour
         PassCoin.IsCanUse = false;//硬币不可用
         MyHand.CardsCanDrag(false);
         MyLeader.SetCanDrag(false);
-        return result;
+        await player.SendAsync(UserOperationType.RoundOperate, result);
     }
     /*
     //创建一张卡牌

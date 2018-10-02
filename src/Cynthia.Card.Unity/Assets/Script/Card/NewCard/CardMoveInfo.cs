@@ -77,7 +77,6 @@ public class CardMoveInfo : MonoBehaviour
             var taget = Vector3.Lerp(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition),0.2f);
             transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, ZPosition);
             //transform.position = new Vector3(taget.x, taget.y, ZPosition);
-            Debug.Log(transform.position);
         }
         else
         {
