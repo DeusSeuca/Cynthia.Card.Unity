@@ -1,4 +1,5 @@
-﻿using Alsein.Utilities.IO;
+﻿using Alsein.Utilities;
+using Alsein.Utilities.IO;
 using Cynthia.Card;
 using Cynthia.Card.Client;
 using System.Collections;
@@ -26,6 +27,10 @@ public class GameCardShowControl : MonoBehaviour
     public int NowMulliganCount { get; set; }
     public int NowMulliganTotal { get; set; }
     //------
+    public int NowSelectTotal { get; set; }
+    public IList<int> NowSelect { get; set; }
+    //public int NowSelectCount { get; set; }
+    //---------------------------------
     private (bool, bool, bool, bool) UseButtonShow { get; set; }
     private bool IsUseMenuShow { get; set; }
     private string useCardTitle { get; set; }
@@ -52,9 +57,9 @@ public class GameCardShowControl : MonoBehaviour
     {
         CardSelectUI.SetActive(false);
     }
-    public void AffirmButtonClick()//确认
+    public async void AffirmButtonClick()//确认
     {
-        Debug.Log("确认");
+        await sender.SendAsync(NowSelect);
     }
     public void HideButtonClick()//隐藏卡牌
     {
@@ -80,9 +85,24 @@ public class GameCardShowControl : MonoBehaviour
             case UseCardShowType.Mulligan:
                 await sender.SendAsync<int>(index);
                 break;
-            case UseCardShowType.None:
-                break;
             case UseCardShowType.Select:
+                var card = CardsContent.transform.GetChild(index).GetComponent<UICard>();
+                if(card.IsSelect)
+                {
+                    card.IsSelect = false;
+                    //NowSelect.RemoveWhere(x => x == index);
+                    var i = NowSelect.IndexOf(index);
+                    NowSelect.RemoveAt(i);
+                }
+                else
+                {
+                    card.IsSelect = true;
+                    NowSelect.Add(index);
+                    if (NowSelect.Count >= NowSelectTotal)
+                        await sender.SendAsync(NowSelect);
+                }
+                break;
+            case UseCardShowType.None:
                 break;
             default:
                 break;
@@ -170,7 +190,18 @@ public class GameCardShowControl : MonoBehaviour
     //选择卡牌
     public async Task SelectMenuCards(MenuSelectCardInfo info, LocalPlayer player)
     {
-
+        useCardTitle = info.Title;
+        UseCardList = info.SelectList;
+        OpenButton.SetActive(true);//打开显示按钮
+        //IsMulliganEndShow,IsCloseShow,IsAffirmShow,IsHideShow
+        UseButtonShow = (false, false, info.IsCanOver, true);
+        NowSelectTotal = info.SelectCount;
+        NowSelect = new List<int>();//清空
+        OpenNowUseMenu();
+        NowUseMenuType = UseCardShowType.Select;
+        await player.SendAsync(UserOperationType.SelectMenuCardsInfo, await receiver.ReceiveAsync<IList<int>>());
+        NowUseMenuType = UseCardShowType.None;
+        NowSelect = new List<int>();//清空
     }
     //------------------------------------------------------------------------------------------------
     public void SetCardInfo(IList<CardStatus> cards)
@@ -198,6 +229,13 @@ public class GameCardShowControl : MonoBehaviour
         else
             CardsContent.GetComponent<GridLayoutGroup>().padding.top = 130;
         Scroll.value = 1;
+        if(IsUseMenuShow&&NowUseMenuType == UseCardShowType.Select)
+        {
+            NowSelect.ForAll(x => 
+            {
+                CardsContent.transform.GetChild(x).GetComponent<UICard>().IsSelect = true;
+            });
+        }
     }
     public void SetButtonShow(bool IsMulliganEndShow = false, bool IsCloseShow = false, bool IsAffirmShow = false, bool IsHideShow = false)
     {
@@ -208,6 +246,8 @@ public class GameCardShowControl : MonoBehaviour
     }
     public void SetButtonShow((bool,bool,bool,bool) ButtonShow)
     {
+        //调度结束,关闭,确认,隐藏
+        //展示墓地固定[关闭]
         var (IsMulliganEndShow, IsCloseShow, IsAffirmShow, IsHideShow) = ButtonShow;
         MulliganEndButton.SetActive(IsMulliganEndShow);
         CloseButton.SetActive(IsCloseShow);

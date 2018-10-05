@@ -12,6 +12,7 @@ public class RegisterClick : MonoBehaviour
     public InputField Password;
     public InputField Password2;
     public Text RegisterMessage;
+    public Text LoginMessage;
 
     private GwentClientService server;
 

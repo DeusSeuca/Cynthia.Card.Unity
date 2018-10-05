@@ -459,14 +459,17 @@ public class GameEvent : MonoBehaviour
         }
     }
     //------------------------------------------------------------------------------------------------
+    //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
     public async Task SelectRow(IList<RowPosition> rowPart, LocalPlayer player)
     {
-
+        await player.SendAsync(UserOperationType.SelectRowInfo,rowPart.First());
     }
     public async Task SelectPlaceCards(PlaceSelectCardsInfo info, LocalPlayer player)
     {
-
+        await player.SendAsync(UserOperationType.SelectPlaceCardsInfo,info.CanSelect);
     }
+    //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+    //-------------------------------------------------------------------------------------------------
     public void SetCard(CardLocation location,CardStatus card)
     {
         var clientCard = GetCard(location);

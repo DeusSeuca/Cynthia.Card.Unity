@@ -9,23 +9,32 @@ using Autofac;
 public class UICard : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
 {
     public GameCodeService GameCodeService { get; set; }
+    public GameObject SelectIcon;
+    public bool IsSelect { get => _isSelect;
+        set
+        {
+            _isSelect = value;
+            SelectIcon.SetActive(value);
+        }
+    }
+    private bool _isSelect;
 
     private void Start()
     {
         GameCodeService = DependencyResolver.Container.Resolve<GameCodeService>();
     }
-
+    //鼠标点击
     public void OnPointerClick(PointerEventData eventData)
     {
         GameCodeService.ClickCard(transform.GetSiblingIndex());
     }
-
+    //鼠标进入
     public void OnPointerEnter(PointerEventData eventData)
     {
         gameObject.GetComponent<RectTransform>().localScale *= 1.05f;
         GameCodeService.SelectCard(transform.GetSiblingIndex());
     }
-
+    //鼠标离开
     public void OnPointerExit(PointerEventData eventData)
     {
         gameObject.GetComponent<RectTransform>().localScale /= 1.05f;

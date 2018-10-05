@@ -8,6 +8,7 @@ TextureImporter:
     21300006: sactx-2048x2048-BC7-CardPicker-9cb8fcb7-var-0.50-_3
     21300008: SelectCardBg1
     21300010: sactx-2048x2048-BC7-CardPicker-9cb8fcb7-var-0.50-_5
+    21300012: MenuSelectCard
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -167,6 +168,26 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: 41c16c0d4fd0cb24482527731e6b4533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MenuSelectCard
+      rect:
+        serializedVersion: 2
+        x: 657
+        y: 360
+        width: 65
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7252e6149b341df4ca3da4f54e06d753
       vertices: []
       indices: 
       edges: []
