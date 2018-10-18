@@ -67,12 +67,12 @@ public class CardMoveInfo : MonoBehaviour
         if (IsDrag)
         {
             Speed = 30f;
-            if (!IsCanDrag)
+            /*if (!IsCanDrag)
             {
                 IsDrag = false;
                 GameEvent.DragCard = null;
                 return;
-            }
+            }*/
             SetNextPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition), Speed,Space.World);
             var taget = Vector3.Lerp(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition),0.2f);
             transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, ZPosition);

@@ -40,7 +40,17 @@ namespace Cynthia.Card.Client
                     GameCodeService.SelectPlaceCards(arguments[0].ToType<PlaceSelectCardsInfo>(), _player);
                     break;
                 case ServerOperationType.SelectRow:
-                    GameCodeService.SelectRow(arguments[0].ToType<IList<RowPosition>>(), _player);
+                    GameCodeService.SelectRow(arguments[0].ToType<CardLocation>(),arguments[1].ToType<IList<RowPosition>>(), _player);
+                    break;
+                case ServerOperationType.PlayCard:
+                    GameCodeService.PlayCard(arguments[0].ToType<CardLocation>(), _player);
+                    break;
+                //-------------------------
+                case ServerOperationType.ShowCardNumberChange:
+                    GameCodeService.ShowCardNumberChange(arguments[0].ToType<CardLocation>(), arguments[1].ToType<int>(),arguments[2].ToType<NumberType> ());
+                    break;
+                case ServerOperationType.ShowBullet:
+                    GameCodeService.ShowBullet(arguments[0].ToType<CardLocation>(), arguments[1].ToType<CardLocation>(), arguments[2].ToType<BulletType>());
                     break;
                 //-------------------------
                 case ServerOperationType.SetCard:

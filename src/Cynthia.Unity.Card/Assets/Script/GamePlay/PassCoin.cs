@@ -16,7 +16,7 @@ public class PassCoin : MonoBehaviour
     public Sprite MonstersIcon;
     public Sprite SkelligeIcon;
     public Sprite NilfgaardIcon;
-    public bool IsCanUse;
+    public bool IsCanUse = false;
 
     public bool IsMyRound
     {   get => _isMyRound;

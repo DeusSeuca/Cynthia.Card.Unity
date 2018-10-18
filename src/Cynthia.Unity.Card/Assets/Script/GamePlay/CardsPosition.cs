@@ -48,7 +48,7 @@ public class CardsPosition : MonoBehaviour
         _temCardIndex = index;
         var newCard = Instantiate(CardPrefab);
         newCard.GetComponent<CardShowInfo>().CurrentCore = cardInfo;
-        newCard.GetComponent<CardShowInfo>().CurrentCore.IsGray = true;
+        newCard.GetComponent<CardShowInfo>().IsGray = true;
         newCard.GetComponent<CardMoveInfo>().IsCanSelect = false;
         newCard.GetComponent<CardShowInfo>().SetCard();
         newCard.transform.SetParent(transform);
@@ -70,7 +70,7 @@ public class CardsPosition : MonoBehaviour
             var item = transform.GetChild(i).gameObject.GetComponent<CardMoveInfo>();
             item.IsStay = false;//(在移动的一瞬间会重置掉停滞,但是却没有...)
             item.IsCanDrag = IsCanDrag;
-            if (item.CardShowInfo.CurrentCore!=null&&!item.CardShowInfo.CurrentCore.IsGray)
+            if (item.CardShowInfo.CurrentCore!=null&&!item.CardShowInfo.IsGray)
                 item.IsCanSelect = IsCanSelect;
             if(!item.IsOn||item.IsStay)//如果没使用的话,恢复
                 item.transform.localScale = Vector3.one;
@@ -132,6 +132,13 @@ public class CardsPosition : MonoBehaviour
             card.IsOn = false;
         }*/
     }
+    public IEnumerable<CardMoveInfo> GetCards()
+    {
+        for(var i = 0; i<transform.childCount; i++)
+        {
+            yield return transform.GetChild(i).GetComponent<CardMoveInfo>();
+        }
+    }
     public void RemoveCard(int cardIndex)
     {
         var card = transform.GetChild(cardIndex).gameObject;
@@ -156,6 +163,37 @@ public class CardsPosition : MonoBehaviour
     {
         return transform.childCount;
     }
+    public void SetPartCardGray(IList<int> part,bool isGray)
+    {
+        var card = default(CardShowInfo);
+        part.ForAll
+        (   i =>
+            {
+                card = transform.GetChild(i).GetComponent<CardShowInfo>();
+                card.IsGray = isGray;
+                //if (card.CurrentCore.IsGray != isGray)
+                //{
+                    //card.CurrentCore.IsGray = isGray;
+                    //card.SetCard();
+                //}
+            }
+        );
+    }
+    public void SetAllCardGray(bool isGray)
+    {
+        var card = default(CardShowInfo);
+        var count = transform.childCount;
+        for(var i = 0; i<count; i++)
+        {
+            card = transform.GetChild(i).GetComponent<CardShowInfo>();
+            card.IsGray = isGray;/*
+            if (card.CurrentCore.IsGray != isGray)
+            {
+                card.CurrentCore.IsGray = isGray;
+                card.SetCard();
+            }*/
+        }
+    }
     public void SetCards(IEnumerable<CardStatus> Cards)
     {
         Cards.Select(x=> 
@@ -164,7 +202,7 @@ public class CardsPosition : MonoBehaviour
             newCard.GetComponent<CardShowInfo>().CurrentCore = x;
             if (x.IsCardBack == false)
             {
-                newCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[x.CardIndex].CardUseInfo;
+                newCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[x.CardId].CardUseInfo;
             }
             newCard.GetComponent<CardShowInfo>().SetCard();
             return newCard.GetComponent<CardMoveInfo>();

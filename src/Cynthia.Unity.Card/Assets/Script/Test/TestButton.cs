@@ -8,8 +8,15 @@ using Cynthia.Card;
 public class TestButton : MonoBehaviour
 {
     public GameObject TestItem;
+    public int Number;
+    public int a = -9;
     public void Click()
     {
         var item = TestItem.GetComponent<GameEvent>();
+        item.ShowNumber(new CardLocation() { RowPosition = RowPosition.MyCemetery, CardIndex = 0},a,NumberType.Countdown);
+        a++;
+    }
+    private void Update()
+    {
     }
 }

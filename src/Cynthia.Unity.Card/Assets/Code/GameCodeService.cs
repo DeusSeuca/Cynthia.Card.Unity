@@ -43,19 +43,23 @@ namespace Cynthia.Card.Client
         }
         //--------------------
         //新纪元系列(选择卡牌,选择场地卡牌,选择行和更新卡牌信息)
-        public void SelectMenuCards(MenuSelectCardInfo info,LocalPlayer player)
+        public void SelectMenuCards(MenuSelectCardInfo info, LocalPlayer player)
         {
-            _=_code.GetComponent<GameCode>().GameCardShowControl.SelectMenuCards(info, player);
+            _ = _code.GetComponent<GameCode>().GameCardShowControl.SelectMenuCards(info, player);
         }
         public void SelectPlaceCards(PlaceSelectCardsInfo info, LocalPlayer player)
         {
-            _=_code.GetComponent<GameCode>().GameEvent.SelectPlaceCards(info, player);
+            _ = _code.GetComponent<GameCode>().GameEvent.SelectPlaceCards(info, player);
         }
-        public void SelectRow(IList<RowPosition> rowPart, LocalPlayer player)
+        public void SelectRow(CardLocation selectCard, IList<RowPosition> rowPart, LocalPlayer player)
         {
-            _=_code.GetComponent<GameCode>().GameEvent.SelectRow(rowPart,player);
+            _ = _code.GetComponent<GameCode>().GameEvent.SelectRow(selectCard, rowPart, player);
         }
-        public void SetCard(CardLocation location,CardStatus card)
+        public void PlayCard(CardLocation location, LocalPlayer player)
+        {
+            _ = _code.GetComponent<GameCode>().GameEvent.GetPlayCard(location, player);
+        }
+        public void SetCard(CardLocation location, CardStatus card)
         {
             _code.GetComponent<GameCode>().GameEvent.SetCard(location, card);
         }
@@ -77,7 +81,7 @@ namespace Cynthia.Card.Client
         //获取调度信息
         public void GetMulliganInfo(LocalPlayer player)
         {
-            _=_code.GetComponent<GameCode>().GameCardShowControl.GetMulliganInfo(player);
+            _ = _code.GetComponent<GameCode>().GameCardShowControl.GetMulliganInfo(player);
         }
         //----------------------------------
         //回合开始动画
@@ -151,6 +155,16 @@ namespace Cynthia.Card.Client
         {
             _code.GetComponent<GameCode>().GameEvent.CardDown(location);
         }
+        //----------------------------------
+        public void ShowCardNumberChange(CardLocation location, int num, NumberType type)
+        {
+            _code.GetComponent<GameCode>().GameEvent.ShowNumber(location, num, type);
+        }
+        public void ShowBullet(CardLocation source, CardLocation taget, BulletType type)
+        {
+            _code.GetComponent<GameCode>().GameEvent.ShowBullet(source,taget,type);
+        }
+        //-------------------------------------------------------------------------------------------
         public void LeaveGame()//立刻离开游戏,进入主菜单
         {
             _code.GetComponent<GameCode>().LeaveGame();

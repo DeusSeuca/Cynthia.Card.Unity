@@ -21,7 +21,7 @@ public class LeaderCard : MonoBehaviour
         {
             var newCard = Instantiate(CardPrefab);
             newCard.GetComponent<CardShowInfo>().CurrentCore = Leader;//设定卡牌信息
-            newCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[Leader.CardIndex].CardUseInfo;//设置卡牌信息
+            newCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[Leader.CardId].CardUseInfo;//设置卡牌信息
             newCard.GetComponent<CardShowInfo>().SetCard();//展现卡牌样式
             newCard.transform.SetParent(transform);//设置卡牌的父物体
             newCard.transform.localPosition = new Vector3(0, 0, -0.01f);//设置卡牌的坐标
@@ -34,8 +34,8 @@ public class LeaderCard : MonoBehaviour
         //--------------------------------
         var grayCard = Instantiate(CardPrefab);
         grayCard.GetComponent<CardShowInfo>().CurrentCore = Leader;//设定卡牌信息
-        grayCard.GetComponent<CardShowInfo>().CurrentCore.IsGray = true;
-        grayCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[Leader.CardIndex].CardUseInfo;//设置卡牌信息
+        grayCard.GetComponent<CardShowInfo>().IsGray = true;
+        grayCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[Leader.CardId].CardUseInfo;//设置卡牌信息
         grayCard.GetComponent<CardShowInfo>().SetCard();//展现卡牌样式
         grayCard.transform.SetParent(transform);//设置卡牌的父物体
         grayCard.transform.localPosition = new Vector3(0, 0, 0);//设置卡牌的坐标
