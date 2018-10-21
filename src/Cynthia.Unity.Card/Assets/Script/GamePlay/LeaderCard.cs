@@ -7,6 +7,7 @@ using Alsein.Utilities;
 
 public class LeaderCard : MonoBehaviour
 {
+    public RowPosition Id;
     public bool IsCardUse;
     public GameObject CardPrefab;
     public bool IsCanSelect;
@@ -22,7 +23,7 @@ public class LeaderCard : MonoBehaviour
             var newCard = Instantiate(CardPrefab);
             newCard.GetComponent<CardShowInfo>().CurrentCore = Leader;//设定卡牌信息
             newCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[Leader.CardId].CardUseInfo;//设置卡牌信息
-            newCard.GetComponent<CardShowInfo>().SetCard();//展现卡牌样式
+            //newCard.GetComponent<CardShowInfo>().SetCard();//展现卡牌样式
             newCard.transform.SetParent(transform);//设置卡牌的父物体
             newCard.transform.localPosition = new Vector3(0, 0, -0.01f);//设置卡牌的坐标
             newCard.transform.localScale = Vector3.one;//设置缩放
@@ -36,7 +37,7 @@ public class LeaderCard : MonoBehaviour
         grayCard.GetComponent<CardShowInfo>().CurrentCore = Leader;//设定卡牌信息
         grayCard.GetComponent<CardShowInfo>().IsGray = true;
         grayCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[Leader.CardId].CardUseInfo;//设置卡牌信息
-        grayCard.GetComponent<CardShowInfo>().SetCard();//展现卡牌样式
+        //grayCard.GetComponent<CardShowInfo>().SetCard();//展现卡牌样式
         grayCard.transform.SetParent(transform);//设置卡牌的父物体
         grayCard.transform.localPosition = new Vector3(0, 0, 0);//设置卡牌的坐标
         grayCard.transform.localScale = Vector3.one;//设置缩放

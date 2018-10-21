@@ -13,8 +13,9 @@ public class TestButton : MonoBehaviour
     public void Click()
     {
         var item = TestItem.GetComponent<GameEvent>();
-        item.ShowNumber(new CardLocation() { RowPosition = RowPosition.MyCemetery, CardIndex = 0},a,NumberType.Countdown);
-        a++;
+        item.ShowCardBreakEffect(new CardLocation() { RowPosition = RowPosition.MyRow1, CardIndex = 0 }, CardBreakEffectType.Banish);
+        //item.ShowNumber(new CardLocation() { RowPosition = RowPosition.MyCemetery, CardIndex = 0},a,NumberType.Countdown);
+        //a++;
     }
     private void Update()
     {

@@ -514,6 +514,15 @@ public class GameEvent : MonoBehaviour
     }
     public CardLocation GetLocation(Transform card)
     {//根据客户端卡牌引用,返回对应坐标
+        var isLeader = card.parent.GetComponent<LeaderCard>();
+        if(isLeader!=null)
+        {
+            return new CardLocation()
+            {
+                RowPosition = isLeader.Id,
+                CardIndex = 0
+            };
+        }
         return new CardLocation()
         {
             RowPosition = card.parent.GetComponent<CardsPosition>().Id,
@@ -661,6 +670,17 @@ public class GameEvent : MonoBehaviour
         //等待补充,从一个地方发射到另一个地方,用某个类型的弹道样式
         //*****************************************************************
     }
+    public void ShowCardIconEffect(CardLocation location, CardIconEffectType type)
+    {
+        //*****************************************************************
+        //等待补充,展示图标的特效
+        //*****************************************************************
+    }
+    public void ShowCardBreakEffect(CardLocation location, CardBreakEffectType type)
+    {
+        //等待补充,展示卡牌破坏的特效(在CardShowInfo)
+        GetCard(location).CardShowInfo.ShowCardBreak(type);
+    }
     //--------------------------------------------------------------------------------
     //以下为给服务端调用的方法
     public void CardMove(MoveCardInfo info)//卡牌移动
@@ -700,7 +720,7 @@ public class GameEvent : MonoBehaviour
         if(info.Card!=null)
         {//如果卡牌有额外信息,直接替换掉当前选中的卡牌(例如从牌库,或者手牌抽出的卡牌)
             soureCard.CardShowInfo.CurrentCore = info.Card;
-            soureCard.CardShowInfo.SetCard();
+            //soureCard.CardShowInfo.SetCard();
         }
         soureCard.IsStay = false;
         //------------------------------------------
@@ -819,7 +839,7 @@ public class GameEvent : MonoBehaviour
     {
         var clientCard = GetCard(location);
         clientCard.CardShowInfo.CurrentCore = card;
-        clientCard.CardShowInfo.SetCard();
+        //clientCard.CardShowInfo.SetCard();
     }
 
     public void CardOn(CardLocation location)//卡牌抬起

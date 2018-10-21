@@ -46,8 +46,15 @@ namespace Cynthia.Card.Client
                     GameCodeService.PlayCard(arguments[0].ToType<CardLocation>(), _player);
                     break;
                 //-------------------------
+                //小动画
                 case ServerOperationType.ShowCardNumberChange:
                     GameCodeService.ShowCardNumberChange(arguments[0].ToType<CardLocation>(), arguments[1].ToType<int>(),arguments[2].ToType<NumberType> ());
+                    break;
+                case ServerOperationType.ShowCardIconEffect:
+                    GameCodeService.ShowCardIconEffect(arguments[0].ToType<CardLocation>(), arguments[1].ToType<CardIconEffectType>());
+                    break;
+                case ServerOperationType.ShowCardBreakEffect:
+                    GameCodeService.ShowCardBreakEffect(arguments[0].ToType<CardLocation>(), arguments[1].ToType<CardBreakEffectType>());
                     break;
                 case ServerOperationType.ShowBullet:
                     GameCodeService.ShowBullet(arguments[0].ToType<CardLocation>(), arguments[1].ToType<CardLocation>(), arguments[2].ToType<BulletType>());

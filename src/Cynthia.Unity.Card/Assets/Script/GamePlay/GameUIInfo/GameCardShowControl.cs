@@ -157,11 +157,11 @@ public class GameCardShowControl : MonoBehaviour
         UseCardList[index] = card;
         var mCard = CardsContent.GetChild(index).GetComponent<CardShowInfo>();
         mCard.CurrentCore = card;
-        mCard.SetCard();
+        //mCard.SetCard();
         //--------------------------
         mCard = GameEvent.MyHand.transform.GetChild(index).GetComponent<CardShowInfo>();
         mCard.CurrentCore = card;
-        mCard.SetCard();
+        //mCard.SetCard();
     }
     //获取调度信息
     public async Task GetMulliganInfo(LocalPlayer player)
@@ -212,7 +212,7 @@ public class GameCardShowControl : MonoBehaviour
         {
             var card = Instantiate(UICardPrefab).GetComponent<CardShowInfo>();
             card.CurrentCore = cards[i];
-            card.SetCard();
+            //card.SetCard();
             card.transform.SetParent(CardsContent, false);
         }
         var nullcount = count <= 10 ? 10 - count : (count % 5 == 0 ? 0 : 5 - count % 5);

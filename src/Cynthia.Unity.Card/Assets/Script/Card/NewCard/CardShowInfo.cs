@@ -11,11 +11,23 @@ public class CardShowInfo : MonoBehaviour
     public CardMoveInfo CardMoveInfo;
     public CardStatus CurrentCore { get=>_currentCore; set
         {
+            if(_currentCore!=null&&(_currentCore.IsCardBack!=value.IsCardBack))
+            {
+                _currentCore = value;
+                GetComponent<Animator>().Play("Reverse");
+                return;
+            }
             _currentCore = value;
-            if (_currentCore.IsCardBack) return;
-            _currentCore.CardInfo = GwentMap.CardMap[_currentCore.CardId];
+            /*if (_currentCore.IsCardBack)
+            {
+                SetCard();
+                return;
+            }*/
+            //_currentCore.CardInfo = GwentMap.CardMap[_currentCore.CardId];
+            SetCard();
         }
     }
+    public GwentCard CardInfo { get => GwentMap.CardMap[_currentCore.CardId]; }
     public bool IsGray { get=>_isGray;
         set
         {
@@ -67,16 +79,10 @@ public class CardShowInfo : MonoBehaviour
     public Image SelectMargin;
     public GameObject SelectIcon;
 
-    public CardShowInfo(CardStatus card)
-    {
-        CurrentCore = card;
-    }/*
-    public void SetGray(bool IsGray)
-    {
-        if(CurrentCore!=null)
-            CurrentCore.IsGray = IsGray;
-        CardStatus.SetActive(IsGray);
-    }*/
+    //目前被CurrentCore属性取代
+    //public CardShowInfo(CardStatus card) => CurrentCore = card;
+    
+    //设定选取状态
     public void SetSelect(bool center,bool margin,bool isLight = false)
     {
         SelectCenter.gameObject.SetActive(center);
@@ -93,18 +99,24 @@ public class CardShowInfo : MonoBehaviour
             SelectMargin.color = new Color(0, 180f/255f, 1);
         }
     }
+
+    //根据CurrentCore来刷新卡面
     public void SetCard()
     {
         var iconCount = 0;
         var use = this.GetComponent<CardMoveInfo>();
         if (use != null&&!CurrentCore.IsCardBack)
-            use.CardUseInfo = CurrentCore.CardInfo.CardUseInfo;
+            use.CardUseInfo = CardInfo.CardUseInfo;
         CardImg.sprite = Resources.Load<Sprite>("Sprites/Cards/"+CurrentCore.CardArtsId);
         //设置卡牌是否灰(转移到属性)
         //如果卡牌是背面,设置背面并结束
         CardBack.gameObject.SetActive(false);
         if (CurrentCore.IsCardBack)
         {
+            RevealIcon.SetActive(false);
+            LockIcon.SetActive(false);
+            Resilience.SetActive(false);
+            SpyingIcon.SetActive(false);
             if (CurrentCore.DeckFaction == Faction.Monsters)
                 CardBack.sprite = MonstersBack;
             if (CurrentCore.DeckFaction == Faction.Nilfgaard)
@@ -118,33 +130,33 @@ public class CardShowInfo : MonoBehaviour
             CardBack.gameObject.SetActive(true);
             return;
         }
-        if (CurrentCore.CardInfo.Group == Group.Gold || CurrentCore.CardInfo.Group == Group.Leader)
+        if (CurrentCore.Group == Group.Gold || CurrentCore.Group == Group.Leader)
             CardBorder.sprite = GoldBorder;
-        if (CurrentCore.CardInfo.Group == Group.Silver)
+        if (CurrentCore.Group == Group.Silver)
             CardBorder.sprite = SilverBorder;
-        if (CurrentCore.CardInfo.Group == Group.Copper)
+        if (CurrentCore.Group == Group.Copper)
             CardBorder.sprite = CopperBorder;
-        if (CurrentCore.CardInfo.Faction == Faction.Monsters)
+        if (CardInfo.Faction == Faction.Monsters)
             FactionIcon.sprite = MonstersIcon;
-        if (CurrentCore.CardInfo.Faction == Faction.Nilfgaard)
+        if (CardInfo.Faction == Faction.Nilfgaard)
             FactionIcon.sprite = NilfgaardIcon;
-        if (CurrentCore.CardInfo.Faction == Faction.NorthernRealms)
+        if (CardInfo.Faction == Faction.NorthernRealms)
             FactionIcon.sprite = NorthernRealmsIcon;
-        if (CurrentCore.CardInfo.Faction == Faction.ScoiaTael)
+        if (CardInfo.Faction == Faction.ScoiaTael)
             FactionIcon.sprite = ScoiaTaelIcon;
-        if (CurrentCore.CardInfo.Faction == Faction.Skellige)
+        if (CardInfo.Faction == Faction.Skellige)
             FactionIcon.sprite = SkelligeIcon;
-        if (CurrentCore.CardInfo.Faction == Faction.Neutral)
+        if (CardInfo.Faction == Faction.Neutral)
             FactionIcon.sprite = NeutralIcon;
-        if(CurrentCore.IsCountdown)
+        CountdownShow.SetActive(CurrentCore.IsCountdown);
+        if (CurrentCore.IsCountdown)
         {
-            CountdownShow.SetActive(true);
             Countdown.text = CurrentCore.Countdown.ToString();
             iconCount++;
         }
-        else
-            CountdownShow.SetActive(false);
-        if (CurrentCore.CardInfo.CardType == CardType.Special)
+        //揭示
+        RevealIcon.SetActive(CurrentCore.IsReveal);
+        if (CardInfo.CardType == CardType.Special)
         {
             Strength.gameObject.SetActive(false);
             FactionIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(50,100);
@@ -161,23 +173,22 @@ public class CardShowInfo : MonoBehaviour
         }
         else
             ArmorShow.SetActive(false);
-        if (CurrentCore.IsLock)
-            LockIcon.SetActive(true);
-        if (CurrentCore.IsResilience)
-            Resilience.SetActive(true);
-        if (CurrentCore.IsSpying)
-            SpyingIcon.SetActive(true);
-        if (CurrentCore.IsReveal)
-            RevealIcon.SetActive(true);
-        if (CurrentCore.Strength + CurrentCore.HealthStatus > 0)
-        {
-            Strength.text = (CurrentCore.Strength + CurrentCore.HealthStatus).ToString();
-            if (CurrentCore.HealthStatus > 0)
-                Strength.color = ConstInfo.GreenColor;
-            if (CurrentCore.HealthStatus < 0)
-                Strength.color = ConstInfo.RedColor;
-        }
+        LockIcon.SetActive(CurrentCore.IsLock);
+        Resilience.SetActive(CurrentCore.IsResilience);
+        SpyingIcon.SetActive(CurrentCore.IsSpying);
+        Strength.text = (CurrentCore.Strength + CurrentCore.HealthStatus).ToString();
+        if (CurrentCore.HealthStatus > 0)
+            Strength.color = ConstInfo.GreenColor;
+        if (CurrentCore.HealthStatus == 0)
+            Strength.color = ConstInfo.NormalColor;
+        if (CurrentCore.HealthStatus < 0)
+            Strength.color = ConstInfo.RedColor;
         FactionIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(50, 50+(iconCount==0?1:iconCount)*50);
         //-----------------------------------------------
+    }
+
+    public void ShowCardBreak(CardBreakEffectType type)
+    {
+        CardMoveInfo.Destroy();
     }
 }

@@ -164,6 +164,14 @@ namespace Cynthia.Card.Client
         {
             _code.GetComponent<GameCode>().GameEvent.ShowBullet(source,taget,type);
         }
+        public void ShowCardIconEffect(CardLocation location, CardIconEffectType type)
+        {
+            _code.GetComponent<GameCode>().GameEvent.ShowCardIconEffect(location,type);
+        }
+        public void ShowCardBreakEffect(CardLocation location, CardBreakEffectType type)
+        {
+            _code.GetComponent<GameCode>().GameEvent.ShowCardBreakEffect(location,type);
+        }
         //-------------------------------------------------------------------------------------------
         public void LeaveGame()//立刻离开游戏,进入主菜单
         {

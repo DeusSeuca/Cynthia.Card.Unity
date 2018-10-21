@@ -115,4 +115,11 @@ public class CardMoveInfo : MonoBehaviour
         ResetPoint = rPoint;
         ZPosition = rPoint.z;
     }
+    public void Destroy()
+    {
+        var row = transform.parent.GetComponent<CardsPosition>();
+        transform.SetParent(null);
+        Destroy(gameObject);
+        row?.ResetCards();
+    }
 }

@@ -50,7 +50,7 @@ public class CardsPosition : MonoBehaviour
         newCard.GetComponent<CardShowInfo>().CurrentCore = cardInfo;
         newCard.GetComponent<CardShowInfo>().IsGray = true;
         newCard.GetComponent<CardMoveInfo>().IsCanSelect = false;
-        newCard.GetComponent<CardShowInfo>().SetCard();
+        //newCard.GetComponent<CardShowInfo>().SetCard();
         newCard.transform.SetParent(transform);
         newCard.transform.SetSiblingIndex(_temCardIndex);
         newCard.transform.localPosition = new Vector3((IsLock?0:(-(transform.childCount - 1f) * XSize / 2f)) + index * XSize, -YSize * index, -0.1f - 0.01f * index);

@@ -5868,6 +5868,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 260e2c9fac5f836419206ab8ebea8d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Id: 15
   IsCardUse: 0
   CardPrefab: {fileID: 1906824597552920, guid: 45b2642d5000e5749a8e41ec59bec860, type: 3}
   IsCanSelect: 1
@@ -7609,6 +7610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 260e2c9fac5f836419206ab8ebea8d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Id: 16
   IsCardUse: 0
   CardPrefab: {fileID: 1906824597552920, guid: 45b2642d5000e5749a8e41ec59bec860, type: 3}
   IsCanSelect: 0
@@ -10195,7 +10197,7 @@ MonoBehaviour:
   XSize: 1.75
   YSize: 0
   Width: 11.8
-  IsCanDrag: 1
+  IsCanDrag: 0
   IsCanSelect: 1
   IsLock: 0
   IsCoverage: 0
