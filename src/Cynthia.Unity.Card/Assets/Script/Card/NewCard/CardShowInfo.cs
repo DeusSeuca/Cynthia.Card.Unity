@@ -9,6 +9,7 @@ using UnityEngine.Events;
 public class CardShowInfo : MonoBehaviour
 {
     public CardMoveInfo CardMoveInfo;
+    public bool IsDead = false;
     public CardStatus CurrentCore { get=>_currentCore; set
         {
             if(_currentCore!=null&&(_currentCore.IsCardBack!=value.IsCardBack))
@@ -189,6 +190,8 @@ public class CardShowInfo : MonoBehaviour
 
     public void ShowCardBreak(CardBreakEffectType type)
     {
-        CardMoveInfo.Destroy();
+        IsDead = true;
+        GetComponent<Animator>().Play("DemoBreak");
+        //CardMoveInfo.Destroy();
     }
 }

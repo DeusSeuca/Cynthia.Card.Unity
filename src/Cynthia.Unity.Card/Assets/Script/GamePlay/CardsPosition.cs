@@ -169,13 +169,16 @@ public class CardsPosition : MonoBehaviour
         part.ForAll
         (   i =>
             {
-                card = transform.GetChild(i).GetComponent<CardShowInfo>();
+                var ti = i;
+                for(var j = 0; j <= ti; j ++)
+                {
+                    if (transform.GetChild(j).GetComponent<CardShowInfo>().IsDead)
+                    {
+                        ti++;
+                    }
+                }
+                card = transform.GetChild(ti).GetComponent<CardShowInfo>();
                 card.IsGray = isGray;
-                //if (card.CurrentCore.IsGray != isGray)
-                //{
-                    //card.CurrentCore.IsGray = isGray;
-                    //card.SetCard();
-                //}
             }
         );
     }

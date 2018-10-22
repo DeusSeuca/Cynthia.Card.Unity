@@ -79,7 +79,7 @@ public class GameEvent : MonoBehaviour
     //最开始
     private void Start()
     {
-        NowOperationType = GameOperationType.GetPassOrGrag;
+        NowOperationType = GameOperationType.None;
 
         //某些信息,目前只是用来测试
         //var sc = GetCard(new CardLocation() { RowPosition = RowPosition.MyRow1, CardIndex = 0 }).CardShowInfo.CurrentCore = new CardStatus("11210200");
@@ -181,6 +181,7 @@ public class GameEvent : MonoBehaviour
                 return;
             }
             _selectCard.transform.localScale = new Vector3(1.05f, 1.05f, 1);
+            Debug.Log(_selectCard.transform.localScale);
             _selectCard.ZPosition -= 1f;
         }
     }
@@ -509,8 +510,16 @@ public class GameEvent : MonoBehaviour
             return MyLeader.TrueCard.GetComponent<CardMoveInfo>();
         if (location.RowPosition == RowPosition.EnemyLeader)
             return EnemyLeader.TrueCard.GetComponent<CardMoveInfo>();
-        return AllCardsPosition.Single(x => x.Id == location.RowPosition)
-            .transform.GetChild(location.CardIndex).GetComponent<CardMoveInfo>();
+        var row = AllCardsPosition.Single(x => x.Id == location.RowPosition);
+        var ti = location.CardIndex;
+        for(var i = 0;i<=ti;i++)
+        {
+            if (row.transform.GetChild(i).GetComponent<CardShowInfo>().IsDead)
+            {
+                ti++;
+            }
+        }
+        return row.transform.GetChild(ti).GetComponent<CardMoveInfo>();
     }
     public CardLocation GetLocation(Transform card)
     {//根据客户端卡牌引用,返回对应坐标
@@ -679,6 +688,7 @@ public class GameEvent : MonoBehaviour
     public void ShowCardBreakEffect(CardLocation location, CardBreakEffectType type)
     {
         //等待补充,展示卡牌破坏的特效(在CardShowInfo)
+        //Debug.Log($"破坏卡牌,强制移出,卡牌坐标为{location.RowPosition}排,第{location.CardIndex}个");
         GetCard(location).CardShowInfo.ShowCardBreak(type);
     }
     //--------------------------------------------------------------------------------
@@ -844,12 +854,14 @@ public class GameEvent : MonoBehaviour
 
     public void CardOn(CardLocation location)//卡牌抬起
     {
+        Debug.Log($"卡牌抬起:{location.RowPosition}");
         var card = GetCard(location);
         card.IsOn = true;
     }
 
     public void CardDown(CardLocation location)//卡牌落下
     {
+        Debug.Log($"卡牌落下:{location.RowPosition}");
         MyLeader.AutoSet();
         EnemyLeader.AutoSet();
         //上面这两行偷懒了,或许以后会改
