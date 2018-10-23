@@ -181,7 +181,6 @@ public class GameEvent : MonoBehaviour
                 return;
             }
             _selectCard.transform.localScale = new Vector3(1.05f, 1.05f, 1);
-            Debug.Log(_selectCard.transform.localScale);
             _selectCard.ZPosition -= 1f;
         }
     }
