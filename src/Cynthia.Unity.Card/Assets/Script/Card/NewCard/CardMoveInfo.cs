@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Alsein.Utilities.IO;
 using Cynthia.Card.Client;
 using Autofac;
+using DG.Tweening;
 
 public class CardMoveInfo : MonoBehaviour
 {
@@ -21,13 +22,16 @@ public class CardMoveInfo : MonoBehaviour
     public bool IsCanSelect = true;
     public bool IsStay = false;
     public bool IsDrag = false;//是否正在拖动
+    public bool IsTem = false;//是否是临时卡
+    //private bool IsRestore = false;//是否还原
     public bool IsOn
     {
         get => _isOn; set
         {
             if (value)
             {
-                transform.localScale = Vector3.one * 1.15f;
+                //transform.localScale = Vector3.one * 1.15f;
+                CardShowInfo.ScaleTo(1.2f);
                 if (!_isOn) ZPosition -= 2;
                 _isOn = value;
             }
@@ -44,45 +48,29 @@ public class CardMoveInfo : MonoBehaviour
     private bool _isOn = false;
     public float Speed = 35f;
     public CardUseInfo CardUseInfo = CardUseInfo.AnyPlace;
-    /*
-    private IAsyncDataSender _sender1;
-    private IAsyncDataReceiver _receiver1;
-    private bool _isMoveToPosition = false;
-    private void Awake() => (_sender1, _receiver1) = AsyncDataEndPoint.CreateSimplex();
-    public async Task MoveToPosition(Vector2 taget,float speed,Space relativeTo = Space.Self)
-    {
-        _isMoveToPosition = true;
-        while (await _receiver1.ReceiveAsync<bool>() && SetNextPosition(taget, speed, relativeTo)) ;
-        _isMoveToPosition = false;
-        return;
-    }*/
 
     void Update()
     {
         var tagetText = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //if(_isMoveToPosition)
-        //_sender1.SendAsync<bool>(true);
         //下一帧应该移动到的位置
         if (IsStay) return;
         if (IsDrag)
         {
+            //if (IsRestore) IsRestore = false;
             Speed = 30f;
-            /*if (!IsCanDrag)
-            {
-                IsDrag = false;
-                GameEvent.DragCard = null;
-                return;
-            }*/
             SetNextPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition), Speed,Space.World);
             var taget = Vector3.Lerp(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition),0.2f);
             transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, ZPosition);
-            //transform.position = new Vector3(taget.x, taget.y, ZPosition);
         }
         else
         {
-            var taget = Vector2.Lerp(transform.localPosition, ResetPoint, 0.25f);
-            transform.localPosition = new Vector3(taget.x, taget.y, ZPosition);
-            //SetNextPosition(ResetPoint, Speed, Space.Self);
+            //if (!IsRestore)
+            //{
+                var taget = Vector2.Lerp(transform.localPosition, ResetPoint, 0.25f);
+                transform.localPosition = new Vector3(taget.x, taget.y, ZPosition);
+                //transform.DOLocalMove(new Vector3(ResetPoint.x,ResetPoint.y,ZPosition),0.5f).SetEase(Ease.Linear);
+                //IsRestore = true;
+            //}
         }
     }
     public bool SetNextPosition(Vector2 taget, float speed, Space relativeTo = Space.Self)

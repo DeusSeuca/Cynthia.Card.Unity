@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using Cynthia.Card.Client;
+using DG.Tweening;
 using Autofac;
 
 public class UICard : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
@@ -31,13 +32,15 @@ public class UICard : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPo
     //鼠标进入
     public void OnPointerEnter(PointerEventData eventData)
     {
-        gameObject.GetComponent<RectTransform>().localScale *= 1.05f;
+        gameObject.GetComponent<RectTransform>().DOScale(1.77f*1.1f,0.1f);
+            //.localScale *= 1.05f;
         GameCodeService.SelectCard(transform.GetSiblingIndex());
     }
     //鼠标离开
     public void OnPointerExit(PointerEventData eventData)
     {
-        gameObject.GetComponent<RectTransform>().localScale /= 1.05f;
+        gameObject.GetComponent<RectTransform>().DOScale(1.77f, 0.1f);
+            ///= 1.05f;
         GameCodeService.SelectCard(-1);
     }
 }

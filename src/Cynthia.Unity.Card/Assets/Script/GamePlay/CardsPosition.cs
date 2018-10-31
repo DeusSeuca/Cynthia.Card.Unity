@@ -50,6 +50,7 @@ public class CardsPosition : MonoBehaviour
         newCard.GetComponent<CardShowInfo>().CurrentCore = cardInfo;
         newCard.GetComponent<CardShowInfo>().IsGray = true;
         newCard.GetComponent<CardMoveInfo>().IsCanSelect = false;
+        newCard.GetComponent<CardMoveInfo>().IsTem = true;
         //newCard.GetComponent<CardShowInfo>().SetCard();
         newCard.transform.SetParent(transform);
         newCard.transform.SetSiblingIndex(_temCardIndex);
@@ -72,8 +73,13 @@ public class CardsPosition : MonoBehaviour
             item.IsCanDrag = IsCanDrag;
             if (item.CardShowInfo.CurrentCore!=null&&!item.CardShowInfo.IsGray)
                 item.IsCanSelect = IsCanSelect;
-            if(!item.IsOn||item.IsStay)//如果没使用的话,恢复
-                item.transform.localScale = Vector3.one;
+            if (!item.IsOn || item.IsStay)//如果没使用的话,恢复
+            {
+                if (item.IsTem)
+                    item.transform.localScale = Vector3.one;
+                else
+                    item.CardShowInfo.ScaleTo(1);
+            }
             item.Speed = 5f;
             item.SetResetPoint(new Vector3((IsLock?0:(-(count - 1f) * size / 2f)) + i * size, -YSize*i,IsCoverage?(-0.1f-0.01f*(count-i-1)):(-0.1f - 0.01f * i)));
         }
@@ -115,22 +121,6 @@ public class CardsPosition : MonoBehaviour
         if (leader != null)
             leader.TrueCard = null;
         ResetCards();
-        /*
-        if (isAwait)
-        {
-            card.IsCanSelect = false;
-            card.IsOn = true;
-            if (IsStayRow)
-                return;
-            card.transform.localScale = Vector3.one * 1.2f;
-            card.ZPosition -= 2f;
-        }
-        else
-        {
-            card.transform.localScale = Vector3.one;
-            card.IsCanSelect = IsCanSelect;
-            card.IsOn = false;
-        }*/
     }
     public IEnumerable<CardMoveInfo> GetCards()
     {

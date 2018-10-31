@@ -57,15 +57,6 @@ public class GameEvent : MonoBehaviour
     public IList<RowPosition> CanSelectRow;//可以被选中的排√(有效
     //放置信息
     public CardStatus CurrentPlayCard;//当前放置的卡牌
-    //<><><><><><><><><><><><><><><
-    //-----------------------------
-    public GameObject CardPrefab;
-    public GameObject NumberPrefab;
-    //管道...
-    private IAsyncDataSender sender;
-    private IAsyncDataReceiver receiver;
-    private void Awake() => (sender, receiver) = AsyncDataEndPoint.CreateSimplex();
-    //状态信息
     public static CanDrop DropTaget;//一个目前模式可以选中的,鼠标悬停上去的排
     private CardShowInfo _selectModeCard;//选择模式中的焦距
     private CardMoveInfo _selectCard;//共有焦距效果
@@ -76,6 +67,15 @@ public class GameEvent : MonoBehaviour
     //是否鼠标停留在硬币上
     private bool IsSelectCoin;
     private bool IsOnCoin;
+    //<><><><><><><><><><><><><><><
+    //-----------------------------
+    public GameObject CardPrefab;
+    public GameObject NumberPrefab;
+    //管道...
+    private IAsyncDataSender sender;
+    private IAsyncDataReceiver receiver;
+    private void Awake() => (sender, receiver) = AsyncDataEndPoint.CreateSimplex();
+    //状态信息
     //最开始
     private void Start()
     {
@@ -170,7 +170,8 @@ public class GameEvent : MonoBehaviour
             if (_selectCard == value) return;
             if (_selectCard != null)
             {
-                _selectCard.transform.localScale = new Vector3(1, 1, 1);
+                //_selectCard.transform.localScale = new Vector3(1, 1, 1);
+                _selectCard.CardShowInfo.ScaleTo(1);
                 _selectCard.ZPosition += 1f;
             }
             _selectCard = value;
@@ -180,7 +181,8 @@ public class GameEvent : MonoBehaviour
                 _selectCard = null;
                 return;
             }
-            _selectCard.transform.localScale = new Vector3(1.05f, 1.05f, 1);
+            //_selectCard.transform.localScale = new Vector3(1.05f, 1.05f, 1);
+            _selectCard.CardShowInfo.ScaleTo(1.1f);
             _selectCard.ZPosition -= 1f;
         }
     }
@@ -494,7 +496,8 @@ public class GameEvent : MonoBehaviour
         var source = card.transform.parent.gameObject.GetComponent<CardsPosition>();
         card.transform.SetParent(taget);
         card.SetResetPoint(Vector3.zero);
-        card.transform.localScale = Vector3.one;
+        //card.transform.localScale = Vector3.one;
+        card.CardShowInfo.ScaleTo(1);
         card.IsCanSelect = false;
         Destroy(card.gameObject, 0.8f);
         if (source != null)
@@ -690,6 +693,13 @@ public class GameEvent : MonoBehaviour
         //Debug.Log($"破坏卡牌,强制移出,卡牌坐标为{location.RowPosition}排,第{location.CardIndex}个");
         GetCard(location).CardShowInfo.ShowCardBreak(type);
     }
+    public void ShowWeatherApply(RowPosition row, RowStatus type)
+    {
+        if (!row.IsOnPlace()) return;
+        //*****************************************************************
+        //等待补充,天气动画
+        //****************************************************************
+    }
     //--------------------------------------------------------------------------------
     //以下为给服务端调用的方法
     public void CardMove(MoveCardInfo info)//卡牌移动
@@ -853,14 +863,12 @@ public class GameEvent : MonoBehaviour
 
     public void CardOn(CardLocation location)//卡牌抬起
     {
-        Debug.Log($"卡牌抬起:{location.RowPosition}");
         var card = GetCard(location);
         card.IsOn = true;
     }
 
     public void CardDown(CardLocation location)//卡牌落下
     {
-        Debug.Log($"卡牌落下:{location.RowPosition}");
         MyLeader.AutoSet();
         EnemyLeader.AutoSet();
         //上面这两行偷懒了,或许以后会改

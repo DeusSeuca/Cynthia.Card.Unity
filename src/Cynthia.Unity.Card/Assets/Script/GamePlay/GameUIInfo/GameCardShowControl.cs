@@ -69,14 +69,8 @@ public class GameCardShowControl : MonoBehaviour
     //------------------------------------------------------------------------------------------
     public void SelectCard(int index)
     {
-        if(index == -1)
-        {
-            //移出和
-        }
-        else
-        {
-            //移入
-        }
+        if (index == -1) { }
+        else { }
     }
     public async void ClickCard(int index)
     {
@@ -90,7 +84,6 @@ public class GameCardShowControl : MonoBehaviour
                 if(card.IsSelect)
                 {
                     card.IsSelect = false;
-                    //NowSelect.RemoveWhere(x => x == index);
                     var i = NowSelect.IndexOf(index);
                     NowSelect.RemoveAt(i);
                 }
@@ -143,10 +136,11 @@ public class GameCardShowControl : MonoBehaviour
         OpenNowUseMenu();
     }
     //调度结束
-    public void MulliganEnd()
+    public void OperationEnd()
     {
         NowUseMenuType = UseCardShowType.None;
         useCardTitle = "错误";
+        NowSelect = null;
         UseCardList = null;
         OpenButton.SetActive(false);//打开
         CardSelectUI.SetActive(false);
@@ -200,8 +194,10 @@ public class GameCardShowControl : MonoBehaviour
         OpenNowUseMenu();
         NowUseMenuType = UseCardShowType.Select;
         await player.SendAsync(UserOperationType.SelectMenuCardsInfo, await receiver.ReceiveAsync<IList<int>>());
-        NowUseMenuType = UseCardShowType.None;
-        NowSelect = new List<int>();//清空
+
+        OperationEnd();
+        //NowUseMenuType = UseCardShowType.None;
+        //NowSelect = new List<int>();//清空
     }
     //------------------------------------------------------------------------------------------------
     public void SetCardInfo(IList<CardStatus> cards)

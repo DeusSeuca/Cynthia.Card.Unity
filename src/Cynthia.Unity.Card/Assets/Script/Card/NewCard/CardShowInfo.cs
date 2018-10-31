@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using DG.Tweening;
 
 public class CardShowInfo : MonoBehaviour
 {
@@ -15,15 +16,10 @@ public class CardShowInfo : MonoBehaviour
             if(_currentCore!=null&&(_currentCore.IsCardBack!=value.IsCardBack))
             {
                 _currentCore = value;
-                GetComponent<Animator>().Play("Reverse");
+                Reverse();//反转
                 return;
             }
             _currentCore = value;
-            /*if (_currentCore.IsCardBack)
-            {
-                SetCard();
-                return;
-            }*/
             //_currentCore.CardInfo = GwentMap.CardMap[_currentCore.CardId];
             SetCard();
         }
@@ -188,10 +184,24 @@ public class CardShowInfo : MonoBehaviour
         //-----------------------------------------------
     }
 
+    //-------------------------------------------------------------------------------------------
+    //DOTween动画
     public void ShowCardBreak(CardBreakEffectType type)
     {
         IsDead = true;
-        GetComponent<Animator>().Play("DemoBreak");
+        //GetComponent<Animator>().Play("DemoBreak");
         //CardMoveInfo.Destroy();
+        DOTween.Sequence().Append(transform.DOScale(0,0.5f))
+            .AppendCallback(CardMoveInfo.Destroy);
+    }
+    public void Reverse()
+    {
+        DOTween.Sequence().Append(transform.DOLocalRotate(new Vector3(0, 90, 0), 0.15f))
+            .AppendCallback(SetCard)
+            .Append(transform.DOLocalRotate(new Vector3(0, 0, 0), 0.15f));
+    }
+    public void ScaleTo(float endValue,float duration = 0.25f, Ease ease = Ease.OutQuad)
+    {
+        transform.DOScale(endValue, duration).SetEase(ease);
     }
 }

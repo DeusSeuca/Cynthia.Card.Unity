@@ -47,6 +47,9 @@ namespace Cynthia.Card.Client
                     break;
                 //-------------------------
                 //小动画
+                case ServerOperationType.ShowWeatherApply:
+                    GameCodeService.ShowWeatherApply(arguments[0].ToType<RowPosition>(), arguments[1].ToType<RowStatus>());
+                    break;
                 case ServerOperationType.ShowCardNumberChange:
                     GameCodeService.ShowCardNumberChange(arguments[0].ToType<CardLocation>(), arguments[1].ToType<int>(),arguments[2].ToType<NumberType> ());
                     break;

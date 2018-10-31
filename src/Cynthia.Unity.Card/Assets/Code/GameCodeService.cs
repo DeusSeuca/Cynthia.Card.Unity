@@ -71,7 +71,7 @@ namespace Cynthia.Card.Client
         //调度结束
         public void MulliganEnd()
         {
-            _code.GetComponent<GameCode>().GameCardShowControl.MulliganEnd();
+            _code.GetComponent<GameCode>().GameCardShowControl.OperationEnd();
         }
         //更新信息(需要更改),动画之类的
         public void MulliganData(int index, CardStatus card)
@@ -156,6 +156,10 @@ namespace Cynthia.Card.Client
             _code.GetComponent<GameCode>().GameEvent.CardDown(location);
         }
         //----------------------------------
+        public void ShowWeatherApply(RowPosition row, RowStatus type)
+        {
+            _code.GetComponent<GameCode>().GameEvent.ShowWeatherApply(row, type);
+        }
         public void ShowCardNumberChange(CardLocation location, int num, NumberType type)
         {
             _code.GetComponent<GameCode>().GameEvent.ShowNumber(location, num, type);
