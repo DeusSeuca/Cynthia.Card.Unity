@@ -8,17 +8,17 @@ using Alsein.Utilities;
 public class LeaderCard : MonoBehaviour
 {
     public RowPosition Id;
-    public bool IsCardUse;
+    public bool IsCardCanUse;
     public GameObject CardPrefab;
     public bool IsCanSelect;
     public bool IsCanDrag;
     public GameObject TrueCard;
     public GameObject GrayCard;
-    public void SetLeader(CardStatus Leader,bool isCardUse)
+    public void SetLeader(CardStatus Leader,bool isCardCanUse)
     {
-        IsCardUse = isCardUse;
+        IsCardCanUse = isCardCanUse;
         DestroyAllChild();
-        if (isCardUse)
+        if (isCardCanUse)
         {
             var newCard = Instantiate(CardPrefab);
             newCard.GetComponent<CardShowInfo>().CurrentCore = Leader;//设定卡牌信息
@@ -45,7 +45,7 @@ public class LeaderCard : MonoBehaviour
         grayCard.GetComponent<CardMoveInfo>().IsCanDrag = false;//设置是否可拖
         grayCard.GetComponent<CardMoveInfo>().IsCanSelect = false;//是否可选
         GrayCard = grayCard;
-        if(isCardUse)
+        if(isCardCanUse)
             grayCard.SetActive(false);
     }
     public void AutoSet()

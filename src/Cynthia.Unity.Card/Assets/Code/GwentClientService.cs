@@ -13,12 +13,22 @@ namespace Cynthia.Card.Client
         public HubConnection HubConnection { get; set; }
         public LocalPlayer Player { get; set; }
         public UserInfo User { get; set; }
+        public bool IsAutoPlay { get; set; } = false;
         private IAsyncDataSender sender;/*待修改*/
         private IAsyncDataReceiver receiver;/*待修改*/
         /*待修改*/
         public Task<bool> MatchResult()
         {
             return receiver.ReceiveAsync<bool>();
+        }
+        public bool ResetPlayer()
+        {
+            if (HubConnection != null && User != null)
+            {
+                Player = new LocalPlayer(HubConnection);
+                return true;
+            }
+            return false;
         }
         public GwentClientService(HubConnection hubConnection)
         {
@@ -42,7 +52,6 @@ namespace Cynthia.Card.Client
                 Player.PlayerName = User.PlayerName;
             return User;
         }
-
         //开始匹配与停止匹配
         public Task<bool> Match(int cardIndex)
         {
@@ -53,7 +62,6 @@ namespace Cynthia.Card.Client
         {
             return HubConnection.InvokeAsync<bool>("StopMatch");
         }
-
         //新建卡组,删除卡组,修改卡组
         public Task<bool> AddDeck(DeckModel deck) => HubConnection.InvokeAsync<bool>("AddDeck", deck);
         public Task<bool> RemoveDeck(int cardIndex) => HubConnection.InvokeAsync<bool>("AddDeck", cardIndex);

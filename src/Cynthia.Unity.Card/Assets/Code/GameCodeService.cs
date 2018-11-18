@@ -20,11 +20,11 @@ namespace Cynthia.Card.Client
             _code = GameObject.Find("Code");
         }
         //-------------------------------------------------------------------------------------------
-        public void SelectCard(int index)
+        public void SelectUICard(int index)
         {
             _code.GetComponent<GameCode>().GameCardShowControl.SelectCard(index);
         }
-        public void ClickCard(int index)
+        public void ClickUICard(int index)
         {
             _code.GetComponent<GameCode>().GameCardShowControl.ClickCard(index);
         }
@@ -62,6 +62,10 @@ namespace Cynthia.Card.Client
         public void SetCard(CardLocation location, CardStatus card)
         {
             _code.GetComponent<GameCode>().GameEvent.SetCard(location, card);
+        }
+        public void CreateCard(CardStatus card, CardLocation location)
+        {
+            _code.GetComponent<GameCode>().GameEvent.CreateCard(card, location);
         }
         //--------------------
         public void MulliganStart(IList<CardStatus> cards, int total)//调度界面

@@ -67,6 +67,7 @@ public class GameEvent : MonoBehaviour
     //是否鼠标停留在硬币上
     private bool IsSelectCoin;
     private bool IsOnCoin;
+    private bool IsAutoPlay { get => DependencyResolver.Container.Resolve<GwentClientService>().IsAutoPlay; }
     //<><><><><><><><><><><><><><><
     //-----------------------------
     public GameObject CardPrefab;
@@ -141,7 +142,6 @@ public class GameEvent : MonoBehaviour
             MyCemetery.IsCanDrop = true;
         }
     }
-
     //当前正在拖拽的卡牌
     public CardMoveInfo DragCard
     {
@@ -160,7 +160,6 @@ public class GameEvent : MonoBehaviour
             _dragCard.ZPosition -= 2f;
         }
     }
-
     //当前选择
     public CardMoveInfo SelectCard
     {
@@ -265,7 +264,6 @@ public class GameEvent : MonoBehaviour
                 break;
         }
     }
-
     //鼠标抬起
     private void OnMouseUp()
     {
@@ -287,6 +285,7 @@ public class GameEvent : MonoBehaviour
                     //回应服务器的请求
                     DragCard.IsStay = true;
                     ResetAllTem();//
+                    if (GetIndex(DragCard.transform) == -1) MyLeader.IsCardCanUse = false;
                     sender.SendAsync<RoundInfo>
                     (
                         new RoundInfo()
@@ -355,7 +354,6 @@ public class GameEvent : MonoBehaviour
                 break;
         }
     }
-
     //右键点击之类的
     private void OnMouseOver()
     {
@@ -368,9 +366,11 @@ public class GameEvent : MonoBehaviour
             switch (trueitem.First().Type)
             {
                 case RightOnType.MyCemetery:
+                    Debug.Log("展示了我方墓地");
                     GameCardShowControl.ShowMyCemetery();
                     break;
                 case RightOnType.EnemyCemetery:
+                    Debug.Log("展示了敌方墓地");
                     GameCardShowControl.ShowEnemyCemetery();
                     break;
                 case RightOnType.Card:
@@ -489,21 +489,6 @@ public class GameEvent : MonoBehaviour
         }
     }
     //[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-    //---------------------------------------------------------------------------------
-    //将某个卡牌丢到墓地或者卡组
-    public void CardMoveBack(CardMoveInfo card,Transform taget)
-    {
-        var source = card.transform.parent.gameObject.GetComponent<CardsPosition>();
-        card.transform.SetParent(taget);
-        card.SetResetPoint(Vector3.zero);
-        //card.transform.localScale = Vector3.one;
-        card.CardShowInfo.ScaleTo(1);
-        card.IsCanSelect = false;
-        Destroy(card.gameObject, 0.8f);
-        if (source != null)
-            source.ResetCards();
-    }
-
     //----------------------------------------------------------------------------------------------
     //一些小方法
     public CardMoveInfo GetCard(CardLocation location)
@@ -554,7 +539,6 @@ public class GameEvent : MonoBehaviour
             }
         }
     }
-
     //获得当前鼠标穿过的所有物体
     private IEnumerable<GameObject> GetMouseAllRaycast()
     {
@@ -562,7 +546,6 @@ public class GameEvent : MonoBehaviour
         var ray = new Ray(ray1.origin, ray1.direction * 100000);
         return Physics.RaycastAll(ray).Select(x => x.collider.gameObject);
     }
-
     //获得某个物体在父物体中的位置
     private int GetIndex(Transform obj)
     {
@@ -614,8 +597,82 @@ public class GameEvent : MonoBehaviour
         index = index > count ? count : index;
         return (int)index;
     }
-    //--------------------------
-    //好像有关系又好像没关系
+    public IEnumerable<int> HandCanPlay()//当前可以打出的手牌
+    {
+        var result = 0.To(MyHand.GetCardCount()-1);//0-数量-1
+        if (MyLeader.IsCardCanUse)
+        {
+            if (MyHand.GetCardCount() > 0)
+                return result.Append(-1);//
+            else
+                return (-1).To(-1);
+        }
+        return result;
+    }
+    public IEnumerable<CardLocation> CardCanPlay(CardUseInfo range)//当前卡牌可以放置的所有位置(不包含弃牌)
+    {
+        var result = new List<CardLocation>();
+        switch(range)
+        {
+            case CardUseInfo.AnyPlace:
+                result.Add(new CardLocation() { CardIndex = 0, RowPosition = RowPosition.SpecialPlace });
+                break;
+            case CardUseInfo.MyPlace:
+                result.Add(new CardLocation() { CardIndex = 0, RowPosition = RowPosition.SpecialPlace });
+                break;
+            case CardUseInfo.EnemyPlace:
+                result.Add(new CardLocation() { CardIndex = 0, RowPosition = RowPosition.SpecialPlace });
+                break;
+            case CardUseInfo.MyRow:
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.MyRow1).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.MyRow1).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.MyRow1, CardIndex = x }));
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.MyRow2).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.MyRow2).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.MyRow2, CardIndex = x }));
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.MyRow3).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.MyRow3).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.MyRow3, CardIndex = x }));
+                break;
+            case CardUseInfo.EnemyRow:
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow1).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow1).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.EnemyRow1, CardIndex = x }));
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow2).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow2).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.EnemyRow2, CardIndex = x }));
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow3).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow3).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.EnemyRow3, CardIndex = x }));
+                break;
+            case CardUseInfo.AnyRow:
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.MyRow1).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.MyRow1).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.MyRow1, CardIndex = x }));
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.MyRow2).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.MyRow2).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.MyRow2, CardIndex = x }));
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.MyRow3).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.MyRow3).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.MyRow3, CardIndex = x }));
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow1).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow1).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.EnemyRow1, CardIndex = x }));
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow2).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow2).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.EnemyRow2, CardIndex = x }));
+                if (AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow3).IsCanPlay)
+                    result.AddRange(0.To(AllCardsPosition.Single(x => x.Id == RowPosition.EnemyRow3).GetCardCount())
+                    .Select(x => new CardLocation() { RowPosition = RowPosition.EnemyRow3, CardIndex = x }));
+                break;
+            case CardUseInfo.ReSet:
+            default:
+                break;
+        }
+        return result;
+    }
+    //---------------------------------------------------------------------------------------------------------
+    //一些动画
     public void DrawArrows(Transform source,Transform taget)
     {
         //实现,画线从来源到目标!
@@ -700,8 +757,141 @@ public class GameEvent : MonoBehaviour
         //等待补充,天气动画
         //****************************************************************
     }
-    //--------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------
+    //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+    //这里是所有回应服务端的方法(由服务端触发)
+    public async Task SelectRow(CardLocation selectCard,IList<RowPosition> rowPart, LocalPlayer player)
+    {
+        //Debug.Log(rowPart.Join("+"));
+        //预处理
+        rowPart.ForAll(x => 
+        {
+            AllCanDrop.Single(row => row.Id == x).IsCanDrop = true;//点亮
+        });
+        CanSelectRow = rowPart;
+        _arrowSource = selectCard != null ? GetCard(selectCard).transform : null;//设定选择方,空则为null
+        NowOperationType = GameOperationType.SelectRow;//当前的状态是!选择排!
+        //得到讯息
+        ///////////自动选排22222222222222
+        if (IsAutoPlay)
+            await sender.SendAsync(rowPart.Mess().First());
+        var result = await receiver.ReceiveAsync<RowPosition>();
+        //收尾工作
+        _arrowSource = null;
+        _arrowTaget = null;//箭头处理
+        DropTaget = null;//不需要的东西都清空
+        NowOperationType = GameOperationType.None;//收工了
+        CurrentPlace = CardUseInfo.ReSet;//熄灭
+        //发送讯息
+        await player.SendAsync(UserOperationType.RoundOperate, result);
+    }
+    public async Task SelectPlaceCards(PlaceSelectCardsInfo info, LocalPlayer player)
+    {
+        //预处理
+        AllCardGray(true);//全卡灰
+        PartCardGray(info.CanSelect,false);//选卡亮
+        if(info.SelectCard!=null)
+            CardGray(info.SelectCard, false);//亮!
+        SelectPlaceCardsInfo = info;
+        NowSelectCards = new List<CardLocation>();//清空一下现在选中的牌
+        _arrowSource = info.SelectCard!=null?GetCard(info.SelectCard).transform:null;//设定选择方,空则为null
+        NowOperationType = GameOperationType.SelectCards;//当前的状态!选择卡牌!
+        //得到讯息
+        ///////////自动选卡22222222222222
+        if (IsAutoPlay)
+            await sender.SendAsync<IList<CardLocation>>
+            (info.CanSelect.CardsPartToLocation().Mess().Take(info.SelectCount).ToList());
+        var result = await receiver.ReceiveAsync<IList<CardLocation>>();
+        //收尾工作 
+        _arrowSource = null;
+        _arrowTaget = null;//箭头处理
+        NowOperationType = GameOperationType.None;//收了
+        NowSelectCards = null;
+        SelectModeCard = null;
+        AllCardsPosition.ForAll(row => row.GetCards().ForAll(card => card.CardShowInfo.SetSelect(false, false)));
+        AllCardGray(false);//全卡亮
+        //发送讯息
+        await player.SendAsync(UserOperationType.RoundOperate, result);
+    }
+    //让玩家使用一个卡牌,或者pass
+    public async Task GetPlayerDrag(LocalPlayer player)//（RoundStart）
+    {
+        //预处理
+        PassCoin.IsCanUse = true;//硬币可用
+        MyHand.CardsCanDrag(true);
+        MyLeader.SetCanDrag(true);
+        NowOperationType = GameOperationType.GetPassOrGrag;//状态!拖或者pass!
+        //得到讯息
+        ///////////自动出牌22222222222222
+        if (IsAutoPlay)
+        {
+            var stayPlayCardIndex = HandCanPlay().Mess().First();
+            //HandCanPlay().Mess().ForAll(x=>Debug.Log(x));////
+            var card = default(CardUseInfo);
+            if (stayPlayCardIndex == -1)
+            {
+                card = GetCard(new CardLocation() { CardIndex = 0, RowPosition = RowPosition.MyLeader }).CardUseInfo;
+                MyLeader.IsCardCanUse = false;
+            }
+            else
+                card = GetCard(new CardLocation() { CardIndex = stayPlayCardIndex, RowPosition = RowPosition.MyHand }).CardUseInfo;
+            var cardCanUse = CardCanPlay(card);
+            await sender.SendAsync(new RoundInfo()
+            {
+                IsPass = false,
+                HandCardIndex = stayPlayCardIndex,
+                CardLocation = (cardCanUse.Count() == 0 ? new CardLocation() { CardIndex = 0, RowPosition = RowPosition.MyCemetery } :
+                (
+                    cardCanUse.GroupBy(x => x.RowPosition).Mess().First().Mess().First()
+                ))
+            });
+        }
+        var result = await receiver.ReceiveAsync<RoundInfo>();
+        //事后
+        NowOperationType = GameOperationType.None;//了
+        PassCoin.IsCanUse = false;//硬币不可用
+        MyHand.CardsCanDrag(false);
+        MyLeader.SetCanDrag(false);
+        //发送讯息
+        await player.SendAsync(UserOperationType.RoundOperate, result);
+    }
+    public async Task GetPlayCard(CardLocation location, LocalPlayer player)
+    {
+        //location 增加高光
+        CurrentPlayCard = GetCard(location).CardShowInfo.CurrentCore;
+        CurrentPlace = GetCard(location).CardUseInfo;
+        NowOperationType = GameOperationType.PlayCard;//放置牌模式
+
+        //得到讯息
+        ///////////自动选位22222222222222
+        if (IsAutoPlay)
+            await sender.SendAsync(CardCanPlay(CurrentPlace).Mess().First());
+        var result = await receiver.ReceiveAsync<CardLocation>();
+
+        NowOperationType = GameOperationType.None;
+        CurrentPlace = CardUseInfo.ReSet;
+        CurrentPlayCard = null;
+        //location 取消高光
+
+        //发送讯息
+        await player.SendAsync(UserOperationType.PlayCardInfo, result);
+    }
+    //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+    //-------------------------------------------------------------------------------------------------
     //以下为给服务端调用的方法
+    //将某个卡牌丢到墓地或者卡组
+    public void CardMoveBack(CardMoveInfo card, Transform taget)
+    {
+        var source = card.transform.parent.gameObject.GetComponent<CardsPosition>();
+        card.transform.SetParent(taget);
+        card.SetResetPoint(Vector3.zero);
+        //card.transform.localScale = Vector3.one;
+        card.CardShowInfo.ScaleTo(1);
+        card.IsCanSelect = false;
+        Destroy(card.gameObject, 0.8f);
+        if (source != null)
+            source.ResetCards();
+    }
     public void CardMove(MoveCardInfo info)//卡牌移动
     {
         var soureCard = default(CardMoveInfo);
@@ -736,7 +926,7 @@ public class GameEvent : MonoBehaviour
         }
         //以上是来源卡牌
         if (soureCard == null) return;
-        if(info.Card!=null)
+        if (info.Card != null)
         {//如果卡牌有额外信息,直接替换掉当前选中的卡牌(例如从牌库,或者手牌抽出的卡牌)
             soureCard.CardShowInfo.CurrentCore = info.Card;
             //soureCard.CardShowInfo.SetCard();
@@ -768,105 +958,29 @@ public class GameEvent : MonoBehaviour
                 break;
         }
     }
-    //------------------------------------------------------------------------------------------------
-    //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-    //这里是所有回应服务端的方法(由服务端触发)
-    public async Task SelectRow(CardLocation selectCard,IList<RowPosition> rowPart, LocalPlayer player)
+    public void CreateCard(CardStatus card, CardLocation location)
     {
-        //预处理
-        rowPart.ForAll(x => 
+        if (location.RowPosition.IsOnRow())
         {
-            AllCanDrop.Single(row => row.Id == x).IsCanDrop = true;//点亮
-        });
-        CanSelectRow = rowPart;
-        _arrowSource = selectCard != null ? GetCard(selectCard).transform : null;//设定选择方,空则为null
-        NowOperationType = GameOperationType.SelectRow;//当前的状态是!选择排!
-        //得到讯息
-        var result = await receiver.ReceiveAsync<RowPosition>();
-        //收尾工作
-        _arrowSource = null;
-        _arrowTaget = null;//箭头处理
-        DropTaget = null;//不需要的东西都清空
-        NowOperationType = GameOperationType.None;//收工了
-        CurrentPlace = CardUseInfo.ReSet;//熄灭
-        //发送讯息
-        await player.SendAsync(UserOperationType.RoundOperate, result);
+            var row = AllCardsPosition.Single(x => x.Id == location.RowPosition);
+            row.CreateCardTo(card, location.CardIndex);
+        }
+        else
+        {
+            //白雾一样的,在看不见的地方创造
+        }
     }
-    public async Task SelectPlaceCards(PlaceSelectCardsInfo info, LocalPlayer player)
-    {
-        //预处理
-        AllCardGray(true);//全卡灰
-        PartCardGray(info.CanSelect,false);//选卡亮
-        if(info.SelectCard!=null)
-            CardGray(info.SelectCard, false);//亮!
-        SelectPlaceCardsInfo = info;
-        NowSelectCards = new List<CardLocation>();//清空一下现在选中的牌
-        _arrowSource = info.SelectCard!=null?GetCard(info.SelectCard).transform:null;//设定选择方,空则为null
-        NowOperationType = GameOperationType.SelectCards;//当前的状态!选择卡牌!
-        //得到讯息
-        var result = await receiver.ReceiveAsync<IList<CardLocation>>();
-        //收尾工作
-        _arrowSource = null;
-        _arrowTaget = null;//箭头处理
-        NowOperationType = GameOperationType.None;//收了
-        NowSelectCards = null;
-        SelectModeCard = null;
-        AllCardsPosition.ForAll(row => row.GetCards().ForAll(card => card.CardShowInfo.SetSelect(false, false)));
-        AllCardGray(false);//全卡亮
-        //发送讯息
-        await player.SendAsync(UserOperationType.RoundOperate, result);
-    }
-    //让玩家使用一个卡牌,或者pass
-    public async Task GetPlayerDrag(LocalPlayer player)//（RoundStart）
-    {
-        //预处理
-        PassCoin.IsCanUse = true;//硬币可用
-        MyHand.CardsCanDrag(true);
-        MyLeader.SetCanDrag(true);
-        NowOperationType = GameOperationType.GetPassOrGrag;//状态!拖或者pass!
-        //得到讯息
-        var result = await receiver.ReceiveAsync<RoundInfo>();
-        //事后
-        NowOperationType = GameOperationType.None;//了
-        PassCoin.IsCanUse = false;//硬币不可用
-        MyHand.CardsCanDrag(false);
-        MyLeader.SetCanDrag(false);
-        //发送讯息
-        await player.SendAsync(UserOperationType.RoundOperate, result);
-    }
-    public async Task GetPlayCard(CardLocation location, LocalPlayer player)
-    {
-        //location 增加高光
-        CurrentPlayCard = GetCard(location).CardShowInfo.CurrentCore;
-        CurrentPlace = GetCard(location).CardUseInfo;
-        NowOperationType = GameOperationType.PlayCard;//放置牌模式
-
-        //得到讯息
-        var result = await receiver.ReceiveAsync<CardLocation>();
-
-        NowOperationType = GameOperationType.None;
-        CurrentPlace = CardUseInfo.ReSet;
-        CurrentPlayCard = null;
-        //location 取消高光
-
-        //发送讯息
-        await player.SendAsync(UserOperationType.PlayCardInfo, result);
-    }
-    //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-    //-------------------------------------------------------------------------------------------------
     public void SetCard(CardLocation location,CardStatus card)
     {
         var clientCard = GetCard(location);
         clientCard.CardShowInfo.CurrentCore = card;
         //clientCard.CardShowInfo.SetCard();
     }
-
     public void CardOn(CardLocation location)//卡牌抬起
     {
         var card = GetCard(location);
         card.IsOn = true;
     }
-
     public void CardDown(CardLocation location)//卡牌落下
     {
         MyLeader.AutoSet();
@@ -875,7 +989,6 @@ public class GameEvent : MonoBehaviour
         var card = GetCard(location);
         card.IsOn = false;
     }
-
     //展示将一些卡丢到墓地
     public void ShowCardsToCemetery(GameCardsPart cards)
     {
@@ -897,14 +1010,12 @@ public class GameEvent : MonoBehaviour
     {
         Coin.IsMyRound = isBlue;
     }
-
     //告诉玩家回合结束
     public void RoundEnd()
     {
         //等待修改,处理回合结束相关
         //PassCoin.IsMyRound = false;
     }
-
     //强制刷新掉所有的辅助临时卡(暂时没必要)
     public void ResetAllTem()
     {
@@ -915,7 +1026,6 @@ public class GameEvent : MonoBehaviour
         MyRow2.CardsPosition.AddTemCard(null, -1);
         MyRow3.CardsPosition.AddTemCard(null, -1);
     }
-
     //设定场上所有卡(灰不灰)
     public void AllCardGray(bool isGray)
     {

@@ -19,8 +19,8 @@ public class CardsPosition : MonoBehaviour
     public bool IsStayRow;//是否是特殊排(待出现)
     public int MaxCards;
     public RowPosition Id;
+    public bool IsCanPlay { get{ return (MaxCards > GetCardCount());}}
     private int _temCardIndex;
-
     private void Start()
     {
         ResetCards();
@@ -57,7 +57,6 @@ public class CardsPosition : MonoBehaviour
         newCard.transform.localPosition = new Vector3((IsLock?0:(-(transform.childCount - 1f) * XSize / 2f)) + index * XSize, -YSize * index, -0.1f - 0.01f * index);
         ResetCards();
     }
-
     public void ResetCards()//将所有卡牌定位到应有的位置
     {
         var size = XSize;
@@ -139,11 +138,42 @@ public class CardsPosition : MonoBehaviour
     }
     public void CreateCard(CardMoveInfo card, int cardIndex)
     {
+        var size = XSize;
+        var count = transform.childCount+1;
+        if ((count - 1f) * size > Width)
+        {
+            size = Width / (count - 1f);
+        }
+        cardIndex = (cardIndex == -1 ? transform.childCount : cardIndex);
+        var position = new Vector3
+            (
+                ((IsLock ? 0 : (-(count - 1f) * size / 2f)) + cardIndex * size), 
+                (-YSize * (cardIndex)),
+                (IsCoverage ? (-0.1f - 0.01f * (count - cardIndex - 1)) : (-0.1f - 0.01f * cardIndex))
+            );
         card.IsCanDrag = IsCanDrag;
         card.transform.SetParent(transform);
-        card.transform.SetSiblingIndex(cardIndex == -1 ? transform.childCount : cardIndex);
+        card.transform.SetSiblingIndex(cardIndex);
+        card.transform.localPosition = position;
+        card.SetResetPoint(position);
         card.transform.localScale = Vector3.one;
         ResetCards();
+    }
+    public void CreateCardTo(CardStatus card, int cardIndex)
+    {
+        var gameCard = CreateCard(card);
+        CreateCard(gameCard, cardIndex);
+    }
+    public CardMoveInfo CreateCard(CardStatus card)
+    {
+        var newCard = Instantiate(CardPrefab);
+        newCard.GetComponent<CardShowInfo>().CurrentCore = card;
+        if (card.IsCardBack == false)
+        {
+            newCard.GetComponent<CardMoveInfo>().CardUseInfo = GwentMap.CardMap[card.CardId].CardUseInfo;
+        }
+        newCard.GetComponent<CardShowInfo>().SetCard();
+        return newCard.GetComponent<CardMoveInfo>();
     }
     public void SetCards(IEnumerable<CardMoveInfo> Cards)
     {

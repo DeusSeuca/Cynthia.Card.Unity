@@ -41,3 +41,13 @@ The following packages were added:
   com.unity.modules.vr@1.0.0
   com.unity.modules.wind@1.0.0
   com.unity.modules.xr@1.0.0
+
+=== Sun Nov  4 20:18:32 2018
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were added:
+  com.unity.xr.legacyinputhelpers@1.0.0
+The following packages were updated:
+  com.unity.package-manager-ui from version 2.0.0-preview.7 to 2.1.0-preview.1

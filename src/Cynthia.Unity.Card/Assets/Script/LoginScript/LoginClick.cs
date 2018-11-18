@@ -32,15 +32,27 @@ public class LoginClick : MonoBehaviour {
             await _client.Login(Username.text, Password.text);
             if (_client.User == null)
             {
-                LogMessage.text = "验证失败,用户名或密码有误,或该用户已处于登录状态";
-                return;
+                await DependencyResolver.Container.Resolve<HubConnection>().StartAsync();
+                await _client.Login(Username.text, Password.text);
+                if (_client.User == null)
+                {
+                    LogMessage.text = "验证失败,用户名或密码有误,如果反复失败请尝试重启客户端或联系作者确认服务器是否开启";
+                    return;
+                }
             }
+            //Debug.Log($"用户名是:{_client.User.UserName},密码是:{_client.User.PassWord}");
             LogMessage.text = $"登录成功,欢迎回来~{_client.User.PlayerName}";
             SceneManager.LoadScene("Game");
         }
         catch
         {
-            LogMessage.text = "发生了一个未知的错误...尝试重启游戏?";
+            await DependencyResolver.Container.Resolve<HubConnection>().StartAsync();
+            await _client.Login(Username.text, Password.text);
+            if (_client.User == null)
+            {
+                LogMessage.text = "验证失败,用户名或密码有误,如果反复失败请尝试重启客户端或联系作者确认服务器是否开启";
+                return;
+            }
         }
     }
     public void Clean()

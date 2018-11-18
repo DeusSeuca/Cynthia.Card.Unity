@@ -15,11 +15,25 @@ namespace Cynthia.Card.Client
         private LocalPlayer _player;
         //--------------------------------
         public GameCodeService GameCodeService { get; set; }
+        public GlobalUIService GlobalUIService { get; set; }
         //--------------------------------
 
         public async Task Play(LocalPlayer player)
         {
+            //无奈的预处理,清理之前的命令,直到获得必定处于第一个命令为止
             _player = player;
+            var flag = true;
+            while(flag)
+            {
+                var result = await _player.ReceiveAsync();
+                switch (result.OperationType)
+                {
+                    case ServerOperationType.SetAllInfo:
+                        GameCodeService.SetAllInfo(result.Arguments.ToArray()[0].ToType<GameInfomation>());
+                        flag = false;
+                        break;
+                }
+            }
             while (ResponseOperation(await _player.ReceiveAsync()));
         }
 
@@ -27,6 +41,7 @@ namespace Cynthia.Card.Client
         //响应指令
         private bool ResponseOperation(Operation<ServerOperationType> operation)
         {
+            //await _player.SendAsync(UserOperationType.OK);////回执（移动到了localPlayer
             //Debug.Log($"收到了指令{operation.OperationType}");
             var arguments = operation.Arguments.ToArray();
             switch (operation.OperationType)
@@ -66,9 +81,15 @@ namespace Cynthia.Card.Client
                 case ServerOperationType.SetCard:
                     GameCodeService.SetCard(arguments[0].ToType<CardLocation>(), arguments[1].ToType<CardStatus>());
                     break;
+                case ServerOperationType.CreateCard:
+                    GameCodeService.CreateCard(arguments[0].ToType<CardStatus>(), arguments[1].ToType<CardLocation>());
+                    break;
                 //----------------------------------------------------------------------------------
                 case ServerOperationType.Debug:
                     Debug.Log(arguments[0].ToType<string>());
+                    break;
+                case ServerOperationType.MessageBox:
+                    _ = GlobalUIService.YNMessageBox("收到了一个来自服务器的消息", arguments[0].ToType<string>());
                     break;
                 case ServerOperationType.GetDragOrPass:
                     GameCodeService.GetPlayerDrag(_player);

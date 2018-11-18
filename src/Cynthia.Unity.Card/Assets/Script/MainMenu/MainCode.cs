@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Autofac;
+using UnityEngine.UI;
 
 public class MainCode : MonoBehaviour
 {
@@ -10,11 +11,18 @@ public class MainCode : MonoBehaviour
     private GwentClientService _client;
     public GameObject Context;
     public GameObject MatchUI;
+    public Button MatchMenuButton;
+    public Button DoMatchButton;
 
     void Start()
     {
         _globalUIService = DependencyResolver.Container.Resolve<GlobalUIService>();
         _client = DependencyResolver.Container.Resolve<GwentClientService>();
+        if(_client.IsAutoPlay)
+        {
+            MatchMenuButton.onClick.Invoke();
+            //DoMatchButton.onClick.Invoke();
+        }
     }
     public async void ExitGameClick()
     {

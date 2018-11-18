@@ -1,26 +1,27 @@
-﻿using System.Collections;
+﻿using Autofac;
+using Cynthia.Card.Client;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using Cynthia.Card.Client;
-using Autofac;
 
-public class SetMatchDeck : MonoBehaviour
+public class SwitchMatchDeck : MonoBehaviour
 {
-    public Text DeckText;
-    private int _index;
+    private int _id;
     private GwentClientService _client;
     private MainCodeService _codeService;
-    public void SetDeckInfo(string name,int index)
+
+    private void Start()
     {
-        DeckText.text = name;
-        _index = index;
         _client = DependencyResolver.Container.Resolve<GwentClientService>();
         _codeService = DependencyResolver.Container.Resolve<MainCodeService>();
     }
+    public void SetId(int id)
+    {
+        _id = id;
+    }
     public void OnClick()
     {
-        _codeService.SetDeck(_client.User.Decks[_index],_index);
+        _codeService.SetDeck(_client.User.Decks[_id], _id);
         _codeService.SwitchDeckClose();
     }
 }

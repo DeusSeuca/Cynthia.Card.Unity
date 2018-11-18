@@ -135,10 +135,11 @@ public class MatchInfo : MonoBehaviour
             Destroy(DecksContext.GetChild(i).gameObject);
         }
         DecksContext.DetachChildren();
-        decks.Select(x => x.Name).ForAll(x => 
+        decks.ForAll(x => 
         {
             var deck = Instantiate(DeckPrefab);
-            deck.GetComponent<SetMatchDeck>().SetDeckInfo(x, DecksContext.childCount);
+            deck.GetComponent<DeckShowInfo>().SetDeckInfo(x.Name,GwentMap.CardMap[x.Leader].Faction);
+            deck.GetComponent<SwitchMatchDeck>().SetId(DecksContext.childCount);
             deck.transform.SetParent(DecksContext, false);
         });
     }
@@ -160,7 +161,7 @@ public class MatchInfo : MonoBehaviour
         DeckIcon.GetComponent<Image>().sprite = _groupIconMap[GwentMap.CardMap[deck.Leader].Faction];
         //////////////////////////////////////////////////
         var leader = Instantiate(LaderPrefab);
-        leader.GetComponent<SetMatchCard>().SetCardInfo(GwentMap.CardMap[deck.Leader].Strength, GwentMap.CardMap[deck.Leader].Name);
+        leader.GetComponent<LeaderShow>().SetLeader(deck.Leader);
         leader.transform.SetParent(CardsContext,false);
         var cards = deck.Deck.Select(x=> GwentMap.CardMap[x]);
         cards.OrderByDescending(x => x.Group).ThenByDescending(x=>x.Strength).GroupBy(x=>x.Name).ForAll(x =>

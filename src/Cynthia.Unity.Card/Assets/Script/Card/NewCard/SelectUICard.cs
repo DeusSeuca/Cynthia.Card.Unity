@@ -7,7 +7,7 @@ using Cynthia.Card.Client;
 using DG.Tweening;
 using Autofac;
 
-public class UICard : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
+public class SelectUICard : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
 {
     public GameCodeService GameCodeService { get; set; }
     public GameObject SelectIcon;
@@ -27,20 +27,20 @@ public class UICard : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPo
     //鼠标点击
     public void OnPointerClick(PointerEventData eventData)
     {
-        GameCodeService.ClickCard(transform.GetSiblingIndex());
+        GameCodeService.ClickUICard(transform.GetSiblingIndex());
     }
     //鼠标进入
     public void OnPointerEnter(PointerEventData eventData)
     {
-        gameObject.GetComponent<RectTransform>().DOScale(1.77f*1.1f,0.1f);
+        gameObject.GetComponent<RectTransform>().DOScale(1.77f*1.05f,0.1f);
             //.localScale *= 1.05f;
-        GameCodeService.SelectCard(transform.GetSiblingIndex());
+        GameCodeService.SelectUICard(transform.GetSiblingIndex());
     }
     //鼠标离开
     public void OnPointerExit(PointerEventData eventData)
     {
         gameObject.GetComponent<RectTransform>().DOScale(1.77f, 0.1f);
             ///= 1.05f;
-        GameCodeService.SelectCard(-1);
+        GameCodeService.SelectUICard(-1);
     }
 }

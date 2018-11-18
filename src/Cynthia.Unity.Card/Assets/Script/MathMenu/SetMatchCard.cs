@@ -11,6 +11,7 @@ public class SetMatchCard : MonoBehaviour
     public GameObject Count;
     public Image Star;
     public Text CountText;
+    public Image Border;
     public Sprite Copper;
     public Sprite Silver;
     public Sprite Gold;
@@ -19,7 +20,7 @@ public class SetMatchCard : MonoBehaviour
     public Sprite GoldStar;
     public void SetCardInfo(int strength,string name,int count = 1,Group group = Group.Gold)
     {
-        gameObject.GetComponent<Image>().sprite = (group == Group.Gold ? Gold : (group==Group.Silver?Silver:Copper));
+        Border.sprite = (group == Group.Gold ? Gold : (group==Group.Silver?Silver:Copper));
         Strength.text = strength.ToString();
         Name.text = name;
         if (strength <= 0)

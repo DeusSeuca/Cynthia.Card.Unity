@@ -1,9 +1,11 @@
 ﻿using Alsein.Utilities;
 using Alsein.Utilities.IO;
+using Autofac;
 using Cynthia.Card;
 using Cynthia.Card.Client;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,7 +45,7 @@ public class GameCardShowControl : MonoBehaviour
     private IAsyncDataSender sender;
     private IAsyncDataReceiver receiver;
     private void Awake() => (sender, receiver) = AsyncDataEndPoint.CreateSimplex();
-
+    private bool IsAutoPlay { get => DependencyResolver.Container.Resolve<GwentClientService>().IsAutoPlay; }
     //------------------------------------------------------------------------------------------
     public void OpenButtonClick()//显示卡牌
     {
@@ -80,7 +82,7 @@ public class GameCardShowControl : MonoBehaviour
                 await sender.SendAsync<int>(index);
                 break;
             case UseCardShowType.Select:
-                var card = CardsContent.transform.GetChild(index).GetComponent<UICard>();
+                var card = CardsContent.transform.GetChild(index).GetComponent<SelectUICard>();
                 if(card.IsSelect)
                 {
                     card.IsSelect = false;
@@ -124,15 +126,16 @@ public class GameCardShowControl : MonoBehaviour
     }
     //------------------------------------------------------------------------------------------------
     //调度开始
-    public void MulliganStart(IList<CardStatus> cards,int total)//调度界面
+    public void MulliganStart(IList<CardStatus> cards, int total)//调度界面
     {
+
         NowMulliganCount = 0;
         NowMulliganTotal = total;
         useCardTitle = $"选择1张卡重抽。[{NowMulliganCount}/{NowMulliganTotal}]";
         UseCardList = cards;
         OpenButton.SetActive(true);//打开显示按钮
-        //IsMulliganEndShow,IsCloseShow,IsAffirmShow,IsHideShow
-        UseButtonShow = (true,false,false,true);
+                                   //IsMulliganEndShow,IsCloseShow,IsAffirmShow,IsHideShow
+        UseButtonShow = (true, false, false, true);
         OpenNowUseMenu();
     }
     //调度结束
@@ -161,6 +164,7 @@ public class GameCardShowControl : MonoBehaviour
     public async Task GetMulliganInfo(LocalPlayer player)
     {
         NowUseMenuType = UseCardShowType.Mulligan;
+        if (IsAutoPlay) await sender.SendAsync<int>(-1);///////////自动调度22222222222222
         var task = await receiver.ReceiveAsync<int>();
         NowUseMenuType = UseCardShowType.None;
         if(task!=-1)
@@ -170,7 +174,7 @@ public class GameCardShowControl : MonoBehaviour
             ShowCardMessage.text = useCardTitle;
         await player.SendAsync(UserOperationType.MulliganInfo, task);
     }
-    //-------------------------------
+    //-----------------------------------------
     public void OpenNowUseMenu()
     {
         //将存起来的标题和卡牌赋值
@@ -184,15 +188,20 @@ public class GameCardShowControl : MonoBehaviour
     //选择卡牌
     public async Task SelectMenuCards(MenuSelectCardInfo info, LocalPlayer player)
     {
-        useCardTitle = info.Title;
-        UseCardList = info.SelectList;
-        OpenButton.SetActive(true);//打开显示按钮
-        //IsMulliganEndShow,IsCloseShow,IsAffirmShow,IsHideShow
-        UseButtonShow = (false, false, info.IsCanOver, true);
-        NowSelectTotal = info.SelectCount;
-        NowSelect = new List<int>();//清空
-        OpenNowUseMenu();
-        NowUseMenuType = UseCardShowType.Select;
+        if (IsAutoPlay) await sender.SendAsync<IList<int>>///////////自动选卡22222222222222
+          (0.To(info.SelectCount-1).Mess().Take(info.SelectCount).ToList());
+        else
+        {
+            useCardTitle = info.Title;
+            UseCardList = info.SelectList;
+            OpenButton.SetActive(true);//打开显示按钮
+                                       //IsMulliganEndShow,IsCloseShow,IsAffirmShow,IsHideShow
+            UseButtonShow = (false, false, info.IsCanOver, true);
+            NowSelectTotal = info.SelectCount;
+            NowSelect = new List<int>();//清空
+            OpenNowUseMenu();
+            NowUseMenuType = UseCardShowType.Select;
+        }
         await player.SendAsync(UserOperationType.SelectMenuCardsInfo, await receiver.ReceiveAsync<IList<int>>());
 
         OperationEnd();
@@ -229,7 +238,7 @@ public class GameCardShowControl : MonoBehaviour
         {
             NowSelect.ForAll(x => 
             {
-                CardsContent.transform.GetChild(x).GetComponent<UICard>().IsSelect = true;
+                CardsContent.transform.GetChild(x).GetComponent<SelectUICard>().IsSelect = true;
             });
         }
     }

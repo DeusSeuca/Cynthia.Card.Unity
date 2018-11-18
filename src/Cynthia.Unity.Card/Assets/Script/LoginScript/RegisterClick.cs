@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Autofac;
+using System;
 
 public class RegisterClick : MonoBehaviour
 {
@@ -45,9 +46,10 @@ public class RegisterClick : MonoBehaviour
             }
             RegisterMessage.text = "成功注册~切换到登录页面可以进行登录~";
         }
-        catch
+        catch//(Exception e)
         {
             RegisterMessage.text = "发生了一个未知的错误...尝试重启游戏?";
+            //RegisterMessage.text = e.Message;
         }
     }
     public void Clean()
