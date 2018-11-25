@@ -11,6 +11,7 @@ public class MainCode : MonoBehaviour
     private GwentClientService _client;
     public GameObject Context;
     public GameObject MatchUI;
+    public EditorInfo EditorMenu;
     public Button MatchMenuButton;
     public Button DoMatchButton;
 

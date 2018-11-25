@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Alsein.Utilities.IO;
 using Alsein.Utilities.LifetimeAnnotations;
@@ -53,10 +54,10 @@ namespace Cynthia.Card.Client
             return User;
         }
         //开始匹配与停止匹配
-        public Task<bool> Match(int cardIndex)
+        public Task<bool> Match(string deckId)
         {
-            Player.Deck = User.Decks[cardIndex];
-            return HubConnection.InvokeAsync<bool>("Match", cardIndex);
+            Player.Deck = User.Decks.Single(x=>x.Id==deckId);
+            return HubConnection.InvokeAsync<bool>("Match", deckId);
         }
         public Task<bool> StopMatch()
         {
@@ -64,8 +65,8 @@ namespace Cynthia.Card.Client
         }
         //新建卡组,删除卡组,修改卡组
         public Task<bool> AddDeck(DeckModel deck) => HubConnection.InvokeAsync<bool>("AddDeck", deck);
-        public Task<bool> RemoveDeck(int cardIndex) => HubConnection.InvokeAsync<bool>("AddDeck", cardIndex);
-        public Task<bool> ModifyDeck(int cardIndex, DeckModel deck) => HubConnection.InvokeAsync<bool>("AddDeck", cardIndex, deck);
+        public Task<bool> RemoveDeck(string deckId) => HubConnection.InvokeAsync<bool>("RemoveDeck", deckId);
+        public Task<bool> ModifyDeck(string deckId, DeckModel deck) => HubConnection.InvokeAsync<bool>("ModifyDeck", deckId, deck);
         public Task SendOperation(Task<Operation<UserOperationType>> operation) => HubConnection.SendAsync("GameOperation", operation);
 
         //开启连接,断开连接

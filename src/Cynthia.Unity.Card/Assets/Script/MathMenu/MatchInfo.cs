@@ -17,19 +17,21 @@ public class MatchInfo : MonoBehaviour
     //-------------------------------------------
     public Transform CardsContext;
     public Transform DecksContext;
-    public Text GC;
-    public Text SC;
-    public Text CC;
+    public Text GoldCount;
+    public Text SilverCount;
+    public Text CopperCount;
+    public Text AllCount;
+    public Image HeadT;
+    public Image HeadB;
+    public Sprite[] HeadTSprite;
+    public Sprite[] HeadBSprite;
 
     public Text DeckName;
     public Transform DeckNameBackground;
     public Transform DeckIcon;
     //-------------------------------------------
-    public Sprite NorthernRealmsIcon;
-    public Sprite ScoiaTaelIcon;
-    public Sprite MonstersIcon;
-    public Sprite SkelligeIcon;
-    public Sprite NilfgaardIcon;
+    public Sprite[] FactionIcon;
+    public Faction[] FactionIndex;
     //-------------------------------------------
     public GameObject ReturnButton;
     public GameObject SwitchButton;
@@ -38,29 +40,46 @@ public class MatchInfo : MonoBehaviour
     public GameObject DeckSwitch;
     public GameObject CardsScrollbar;
     public GameObject DecksScrollbar;
+    //
+    public GameObject[] DeckPrefabs;
+    //
     public Text MatchButtonText;
     public Text MatchMessage;
     //-------------------------------------------
-    public int CurrentDeckIndex { get; private set; }
+    public GameObject MainUI;
+    public GameObject MatchUI;
+    public MainMenuEffect[] ResetTextMenus;
+    //-------------------------------------------
+    public string CurrentDeckId { get; private set; }
     public bool IsDoingMatch { get; private set; }
 
-    private GwentClientService _client;
-    private IDictionary<Faction, Sprite> _groupIconMap;
+    private GwentClientService _client { get => DependencyResolver.Container.Resolve<GwentClientService>();}
+    private GlobalUIService _UIService { get => DependencyResolver.Container.Resolve<GlobalUIService>(); }
 
+    public void MatchMenuClick()
+    {
+        if (_client.User.Decks.Count()<=0)
+        {
+            _UIService.YNMessageBox("当前没有卡组", "当前没有卡组,请添加卡组后再进行匹配");
+        }
+        else
+        {
+            ResetMatch();
+            MainUI.SetActive(false);
+            MatchUI.SetActive(true);
+            ResetTextMenus.ForAll(x => x.TextReset());
+        }
+    }
     void Start()
     {
+        ResetMatch();
         IsDoingMatch = false;
-        _client = DependencyResolver.Container.Resolve<GwentClientService>();
-        _groupIconMap = new Dictionary<Faction, Sprite>
-         {
-             {Faction.NorthernRealms,NorthernRealmsIcon},
-             {Faction.ScoiaTael,ScoiaTaelIcon},
-             {Faction.Monsters,MonstersIcon},
-             {Faction.Skellige,SkelligeIcon},
-             {Faction.Nilfgaard,NilfgaardIcon},
-         };
-
-        SetDeck(_client.User.Decks[0],0);
+        //_client = DependencyResolver.Container.Resolve<GwentClientService>();
+        //_UIService = DependencyResolver.Container.Resolve<GlobalUIService>();
+    }
+    public void ResetMatch()
+    {
+        SetDeck(_client.User.Decks[0], _client.User.Decks[0].Id);
         SetDeckList(_client.User.Decks);
     }
     public void Match()/////待编辑
@@ -85,7 +104,7 @@ public class MatchInfo : MonoBehaviour
             return;
         }
         //开始匹配
-        if (!await _client.Match(CurrentDeckIndex))
+        if (!await _client.Match(CurrentDeckId))
         {
             Debug.Log("发送未知错误,匹配失败");
         }
@@ -137,16 +156,16 @@ public class MatchInfo : MonoBehaviour
         DecksContext.DetachChildren();
         decks.ForAll(x => 
         {
-            var deck = Instantiate(DeckPrefab);
-            deck.GetComponent<DeckShowInfo>().SetDeckInfo(x.Name,GwentMap.CardMap[x.Leader].Faction);
+            var deck = Instantiate(DeckPrefabs[GetFactionIndex(GwentMap.CardMap[x.Leader].Faction)]);
+            deck.GetComponent<DeckShowInfo>().SetDeckInfo(x.Name,x.IsBasicDeck());
             deck.GetComponent<SwitchMatchDeck>().SetId(DecksContext.childCount);
             deck.transform.SetParent(DecksContext, false);
         });
     }
 
-    public void SetDeck(DeckModel deck,int index)
+    public void SetDeck(DeckModel deck,string id)
     {
-        CurrentDeckIndex = index;
+        CurrentDeckId = id;
         var count = CardsContext.childCount;
         for (var i = count - 1; i >= 0; i--)
         {
@@ -158,7 +177,7 @@ public class MatchInfo : MonoBehaviour
         DeckNameBackground.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(25* DeckName.text.Length+ 150, 71);
         DeckName.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(25 * DeckName.text.Length, 40);
         DeckName.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(-25 * DeckName.text.Length/2 - 50, 0);
-        DeckIcon.GetComponent<Image>().sprite = _groupIconMap[GwentMap.CardMap[deck.Leader].Faction];
+        DeckIcon.GetComponent<Image>().sprite = FactionIcon[GetFactionIndex(GwentMap.CardMap[deck.Leader].Faction)];
         //////////////////////////////////////////////////
         var leader = Instantiate(LaderPrefab);
         leader.GetComponent<LeaderShow>().SetLeader(deck.Leader);
@@ -167,15 +186,22 @@ public class MatchInfo : MonoBehaviour
         cards.OrderByDescending(x => x.Group).ThenByDescending(x=>x.Strength).GroupBy(x=>x.Name).ForAll(x =>
         {
             var card = Instantiate(CardPrefab);
-            card.GetComponent<SetMatchCard>().SetCardInfo(x.First().Strength, x.Key,x.Count(),x.First().Group);
+            card.GetComponent<ListCardShowInfo>().SetCardInfo(x.First().Strength, x.Key,x.Count(),x.First().Group);
             card.transform.SetParent(CardsContext, false);
         });
-        CC.text = cards.Where(x => x.Group == Group.Copper).Count().ToString();
-        SC.text = $"{cards.Where(x => x.Group == Group.Silver).Count().ToString()}/6";
-        GC.text = $"{cards.Where(x => x.Group == Group.Gold).Count().ToString()}/4";
+        CopperCount.text = cards.Where(x => x.Group == Group.Copper).Count().ToString();
+        SilverCount.text = $"{cards.Where(x => x.Group == Group.Silver).Count().ToString()}/6";
+        GoldCount.text = $"{cards.Where(x => x.Group == Group.Gold).Count().ToString()}/4";
+        AllCount.text = $"{deck.Deck.Count()}";
+        HeadT.sprite = HeadTSprite[GetFactionIndex(GwentMap.CardMap[deck.Leader].Faction)];
+        HeadB.sprite = HeadBSprite[GetFactionIndex(GwentMap.CardMap[deck.Leader].Faction)];
         //////////////////////////////////////////////////
         var height = ((41.5f+3f)*CardsContext.childCount)+8f+38f;
         CardsContext.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(GetComponent<RectTransform>().sizeDelta.x, height);
+    }
+    public int GetFactionIndex(Faction faction)
+    {
+        return FactionIndex.Indexed().Single(x => x.Item1 == faction).index;
     }
 }
 

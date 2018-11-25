@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cynthia.Card;
 
-public class SetMatchCard : MonoBehaviour
+public class ListCardShowInfo : MonoBehaviour
 {
     public Text Strength;
     public Text Name;
@@ -34,5 +34,14 @@ public class SetMatchCard : MonoBehaviour
             Count.SetActive(true);
             CountText.text = $"x{count.ToString()}";
         }
+    }
+    public void SetCardInfo(CardStatus card,int count = 1)
+    {
+        SetCardInfo(card.Strength, card.CardInfo().Name, 1, card.Group);
+    }
+    public void SetCardInfo(string id,int count = 1)
+    {
+        var card = GwentMap.CardMap[id];
+        SetCardInfo(card.Strength,card.Name,count,card.Group);
     }
 }

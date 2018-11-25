@@ -21,7 +21,7 @@ public class SwitchMatchDeck : MonoBehaviour
     }
     public void OnClick()
     {
-        _codeService.SetDeck(_client.User.Decks[_id], _id);
+        _codeService.SetDeck(_client.User.Decks[_id], _client.User.Decks[_id].Id);
         _codeService.SwitchDeckClose();
     }
 }

@@ -8,6 +8,8 @@ TextureImporter:
     21300006: ScrollIcon
     21300008: CardShowIcon
     21300010: halfMenuBg1
+    21300012: MenuBg2
+    21300014: BlueLight
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -120,7 +122,7 @@ TextureImporter:
         width: 1023
         height: 855
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 40, y: 45, z: 42, w: 40}
       outline: []
       physicsShape: []
@@ -140,7 +142,7 @@ TextureImporter:
         width: 150
         height: 150
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -160,7 +162,7 @@ TextureImporter:
         width: 32
         height: 834
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 36, z: 0, w: 35}
       outline: []
       physicsShape: []
@@ -180,7 +182,7 @@ TextureImporter:
         width: 21
         height: 121
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 53, z: 0, w: 55}
       outline: []
       physicsShape: []
@@ -200,7 +202,7 @@ TextureImporter:
         width: 275
         height: 370
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 36, y: 35, z: 39, w: 41}
       outline: []
       physicsShape: []
@@ -220,13 +222,53 @@ TextureImporter:
         width: 421
         height: 858
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 40, y: 44, z: 40, w: 40}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
       spriteID: 4d6c5bf0d5abf2b4989d7fa485bbe659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MenuBg2
+      rect:
+        serializedVersion: 2
+        x: 1029
+        y: 1
+        width: 953
+        height: 856
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 79, y: 76, z: 79, w: 73}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9c33157fff9e29418522a3ac5f58b4a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BlueLight
+      rect:
+        serializedVersion: 2
+        x: 677
+        y: 1728
+        width: 330
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 6, y: 6, z: 8, w: 7}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2a68a9181e943046a14a1ad15531975
       vertices: []
       indices: 
       edges: []

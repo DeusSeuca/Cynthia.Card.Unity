@@ -9,30 +9,14 @@ using Cynthia.Card;
 public class DeckShowInfo : MonoBehaviour
 {
     public Text DeckText;
-    public Sprite MonsterIcon;
-    public Sprite NilfgaardIcon;
-    public Sprite ScoiataelIcon;
-    public Sprite NorthernreaIcon;
-    public Sprite SkelligeIcon;
-    public Sprite NeutralIcon;
+    public Sprite UnAvaliableIcon;
+    public Sprite AvaliableIcon;
     public Image HeadIcon;
-    private IDictionary<Faction, Sprite> _groupIconMap;
-    public void Start()
+    public Image AvaliableShow;
+
+    public void SetDeckInfo(string name,bool isAvaliable)
     {
-        _groupIconMap = new Dictionary<Faction, Sprite>
-         {
-             {Faction.NorthernRealms,NorthernreaIcon},
-             {Faction.ScoiaTael,ScoiataelIcon},
-             {Faction.Monsters,MonsterIcon},
-             {Faction.Skellige,SkelligeIcon},
-             {Faction.Nilfgaard,NilfgaardIcon},
-         };
-    }
-    public void SetDeckInfo(string name,Faction faction)
-    {
-        if (_groupIconMap == null) Start();
-        //Debug.Log(faction);
-        HeadIcon.sprite = _groupIconMap[faction];
+        AvaliableShow.sprite = isAvaliable ? AvaliableIcon : UnAvaliableIcon;
         DeckText.text = name;
     }
 }
