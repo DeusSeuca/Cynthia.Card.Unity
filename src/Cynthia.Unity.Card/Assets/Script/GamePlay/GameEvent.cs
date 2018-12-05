@@ -25,6 +25,7 @@ public class GameEvent : MonoBehaviour
     public CanDrop MyPlance;
     public CanDrop EnemyPlance;
     public CanDrop MyCemetery;//我方墓地可以被拖上
+    public ShowWeather ShowWeather;
 
     public GameCardShowControl GameCardShowControl;
     //三个定位点
@@ -756,6 +757,7 @@ public class GameEvent : MonoBehaviour
         //*****************************************************************
         //等待补充,天气动画
         //****************************************************************
+        ShowWeather.SetWeather(row, type);
     }
     //------------------------------------------------------------------------------------------------
     //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>

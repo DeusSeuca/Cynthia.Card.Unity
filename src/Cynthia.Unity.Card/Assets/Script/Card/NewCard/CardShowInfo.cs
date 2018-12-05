@@ -10,7 +10,8 @@ using DG.Tweening;
 public class CardShowInfo : MonoBehaviour
 {
     public CardMoveInfo CardMoveInfo;
-    public bool IsDead = false;
+    public bool IsDead { get=>_isDead&&CardMoveInfo.IsTem; set=>value = _isDead; }
+    public bool _isDead = false;
     public CardStatus CurrentCore { get=>_currentCore; set
         {
             if(_currentCore!=null&&(_currentCore.IsCardBack!=value.IsCardBack))

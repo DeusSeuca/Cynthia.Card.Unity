@@ -469,7 +469,11 @@ public class EditorInfo : MonoBehaviour
     public void ClickEditorUICoreCard(CardStatus card)
     {//点击了显示卡牌  应该判断是否应该添加卡牌,如果可以,添加并且更新显示,否则跳出消息提醒
         var count = _nowEditorDeck.Deck.Where(x => x == card.CardId).Count();
-        if (!((card.Group == Group.Copper && count >= 3) || (card.Group != Group.Copper && count >= 1)|| _nowEditorDeck.Deck.Count>=40))
+        if (!((card.Group == Group.Copper && count >= 3) || 
+            (card.Group != Group.Copper && count >= 1)|| 
+            (_nowEditorDeck.Deck.Count>=40)||
+            (card.Group == Group.Silver && _nowEditorDeck.Deck.Where(x => x.CardInfo().Group==Group.Silver).Count()>=6)||
+            (card.Group == Group.Gold && _nowEditorDeck.Deck.Where(x => x.CardInfo().Group == Group.Gold).Count() >= 4)))
         {   //如果超过上限,禁止加入卡牌
             _nowEditorDeck.Deck.Add(card.CardId);
             SetEditorDeck(_nowEditorDeck);

@@ -79,9 +79,12 @@ public class GameCardShowControl : MonoBehaviour
         switch (NowUseMenuType)
         {
             case UseCardShowType.Mulligan:
-                await sender.SendAsync<int>(index);
+                if(IsUseMenuShow)
+                    await sender.SendAsync<int>(index);
                 break;
             case UseCardShowType.Select:
+                if (!IsUseMenuShow)
+                    break;
                 var card = CardsContent.transform.GetChild(index).GetComponent<SelectUICard>();
                 if(card.IsSelect)
                 {
