@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Alsein.Utilities.IO;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Cynthia.Card.Client
 {
