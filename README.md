@@ -1,2 +1,2 @@
 # Cynthia.Card.Client
-卡牌游戏的Unity3D客户端
+- 与Cynthia.Card.Server对应的Unity3d客户端
