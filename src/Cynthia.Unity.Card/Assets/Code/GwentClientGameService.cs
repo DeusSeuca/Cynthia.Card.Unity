@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Alsein.Utilities;
+using Alsein.Extensions;
 using UnityEngine;
-using Alsein.Utilities.LifetimeAnnotations;
+using Alsein.Extensions.LifetimeAnnotations;
 using System.Threading;
 
 namespace Cynthia.Card.Client
@@ -20,20 +20,8 @@ namespace Cynthia.Card.Client
 
         public async Task Play(LocalPlayer player)
         {
-            //无奈的预处理,清理之前的命令,直到获得必定处于第一个命令为止
+            Debug.Log("游戏开始");
             _player = player;
-            var flag = true;
-            while(flag)
-            {
-                var result = await _player.ReceiveAsync();
-                switch (result.OperationType)
-                {
-                    case ServerOperationType.SetAllInfo:
-                        GameCodeService.SetAllInfo(result.Arguments.ToArray()[0].ToType<GameInfomation>());
-                        flag = false;
-                        break;
-                }
-            }
             while (ResponseOperation(await _player.ReceiveAsync()));
         }
 
@@ -41,8 +29,7 @@ namespace Cynthia.Card.Client
         //响应指令
         private bool ResponseOperation(Operation<ServerOperationType> operation)
         {
-            //await _player.SendAsync(UserOperationType.OK);////回执（移动到了localPlayer
-            //Debug.Log($"收到了指令{operation.OperationType}");
+            Debug.Log($"收到了指令{operation.OperationType}");
             var arguments = operation.Arguments.ToArray();
             switch (operation.OperationType)
             {

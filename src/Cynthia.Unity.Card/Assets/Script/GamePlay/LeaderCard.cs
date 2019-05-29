@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cynthia.Card;
 using System.Linq;
-using Alsein.Utilities;
+using Alsein.Extensions;
 
 public class LeaderCard : MonoBehaviour
 {

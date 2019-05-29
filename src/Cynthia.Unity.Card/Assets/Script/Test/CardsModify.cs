@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Cynthia.Card.Client;
 using Cynthia.Card;
 using UnityEngine;
-using Alsein.Utilities;
+using Alsein.Extensions;
 
 public class CardsModify : MonoBehaviour
 {

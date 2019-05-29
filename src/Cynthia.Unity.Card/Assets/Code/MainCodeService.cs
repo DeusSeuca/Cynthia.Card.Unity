@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Alsein.Utilities.LifetimeAnnotations;
+using Alsein.Extensions.LifetimeAnnotations;
 using Autofac;
 using Microsoft.AspNetCore.SignalR.Client;
 using UnityEngine;
 using UnityEngine.Audio;
-using Alsein.Utilities;
+using Alsein.Extensions;
 using System.Collections.Generic;
 
 namespace Cynthia.Card.Client

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Threading.Tasks;
-using Alsein.Utilities.IO;
+using Alsein.Extensions.IO;
 
 public class MessageBox : MonoBehaviour
 {
@@ -11,11 +11,13 @@ public class MessageBox : MonoBehaviour
     public Text MessageText;
     public Text YesText;
     public Text NoText;
-    private IAsyncDataSender sender;
-    private IAsyncDataReceiver receiver;
+    private ITubeInlet sender;
+    private ITubeOutlet receiver;
+    //private IAsyncDataSender sender;
+    //private IAsyncDataReceiver receiver;
     private void Awake()
     {
-        (sender, receiver) = AsyncDataEndPoint.CreateSimplex();
+        (sender, receiver) = Tube.CreateSimplex();
     }
     public Task<bool> Show(string title,string message,string yes = "确定",string no = "取消")
     {

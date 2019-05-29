@@ -1,5 +1,5 @@
-﻿using Alsein.Utilities;
-using Alsein.Utilities.IO;
+﻿using Alsein.Extensions;
+using Alsein.Extensions.IO;
 using Autofac;
 using Cynthia.Card;
 using Cynthia.Card.Client;
@@ -42,9 +42,9 @@ public class GameCardShowControl : MonoBehaviour
     public IList<CardStatus> MyCemetery;
     public IList<CardStatus> EnemyCemetery;
     //
-    private IAsyncDataSender sender;
-    private IAsyncDataReceiver receiver;
-    private void Awake() => (sender, receiver) = AsyncDataEndPoint.CreateSimplex();
+    private ITubeInlet sender;
+    private ITubeOutlet receiver;
+    private void Awake() => (sender, receiver) = Tube.CreateSimplex();
     private bool IsAutoPlay { get => DependencyResolver.Container.Resolve<GwentClientService>().IsAutoPlay; }
     //------------------------------------------------------------------------------------------
     public void OpenButtonClick()//显示卡牌
@@ -175,6 +175,7 @@ public class GameCardShowControl : MonoBehaviour
         useCardTitle = $"选择1张卡重抽。[{NowMulliganCount}/{NowMulliganTotal}]";
         if(IsUseMenuShow)
             ShowCardMessage.text = useCardTitle;
+        Debug.Log("发送调度消息");
         await player.SendAsync(UserOperationType.MulliganInfo, task);
     }
     //-----------------------------------------

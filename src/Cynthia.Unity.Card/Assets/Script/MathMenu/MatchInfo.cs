@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Cynthia.Card.Client;
 using Cynthia.Card;
 using UnityEngine;
-using Alsein.Utilities;
+using Alsein.Extensions;
 using System.Linq;
 using Autofac;
 using UnityEngine.UI;
@@ -112,7 +112,7 @@ public class MatchInfo : MonoBehaviour
         Match();
         if (await _client.MatchResult())
         {
-            //Debug.Log("成功匹配,进入游戏");
+            Debug.Log("成功匹配,进入游戏");
             SceneManager.LoadScene("GamePlay");
             return;
         }
@@ -201,7 +201,7 @@ public class MatchInfo : MonoBehaviour
     }
     public int GetFactionIndex(Faction faction)
     {
-        return FactionIndex.Indexed().Single(x => x.Item1 == faction).index;
+        return FactionIndex.Indexed().Single(x => x.Value == faction).Key;
     }
 }
 

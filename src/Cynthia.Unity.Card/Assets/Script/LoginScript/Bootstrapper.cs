@@ -3,10 +3,10 @@ using Autofac;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Reflection;
 using System.Linq;
-using Alsein.Utilities.LifetimeAnnotations;
+using Alsein.Extensions.LifetimeAnnotations;
 using Cynthia.Card.Client;
 using Autofac.Extensions.DependencyInjection;
-using Alsein.Utilities;
+using Alsein.Extensions;
 using UnityEngine.UI;
 using System;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ using System.Net;
 
 public class Bootstrapper : MonoBehaviour {
     public InputField TestText;
-    public async void Awake()
+    public void Awake()
     {
         var IP = Dns.GetHostEntry("cynthia.ovyno.com").AddressList[0];
         if (DependencyResolver.Container != null)
@@ -34,27 +34,28 @@ public class Bootstrapper : MonoBehaviour {
         builder.RegisterTypes(services.Where(x => x.IsDefined(typeof(ScopedAttribute))).ToArray()).PropertiesAutowired().AsSelf().InstancePerLifetimeScope();
         builder.RegisterTypes(services.Where(x => x.IsDefined(typeof(TransientAttribute))).ToArray()).PropertiesAutowired().AsSelf().InstancePerDependency();
         DependencyResolver.Container = builder.Build();
-        await DependencyResolver.Container.Resolve<HubConnection>().StartAsync();
-        //-------------------------------------------------------------------------------------------------------------------------------
-        DependencyResolver.Container.Resolve<HubConnection>().Closed += (async x =>
-        {
-            var user = DependencyResolver.Container.Resolve<GwentClientService>().User;
-            await Task.Delay(100);
-            await DependencyResolver.Container.Resolve<HubConnection>().StartAsync();
-            var result = await DependencyResolver.Container.Resolve<HubConnection>().InvokeAsync<bool>("Reconnect", user.UserName, user.PassWord);
-            if (result) Debug.Log("尝试重连成功");
-            else
-            {
-                SceneManager.LoadScene("LoginSecen");
-                await DependencyResolver.Container.Resolve<GlobalUIService>().YNMessageBox("断开连接", "请尝试重新登陆");
-            }
-        });
-        //-------------------------
-        DependencyResolver.Container.Resolve<HubConnection>().On("RepeatLogin",async () => 
-        {
-            SceneManager.LoadScene("LoginSecen");
-            await DependencyResolver.Container.Resolve<GlobalUIService>().YNMessageBox("账号被其他人强制登陆", "账号被登陆,被挤下了线");
-        });
+        //await DependencyResolver.Container.Resolve<HubConnection>().StartAsync();
+        ////-------------------------------------------------------------------------------------------------------------------------------
+        //DependencyResolver.Container.Resolve<HubConnection>().Closed += (async x =>
+        //{
+        //    Debug.Log("断线!");
+        //    var user = DependencyResolver.Container.Resolve<GwentClientService>().User;
+        //    await Task.Delay(100);
+        //    await DependencyResolver.Container.Resolve<HubConnection>().StartAsync();
+        //    var result = await DependencyResolver.Container.Resolve<HubConnection>().InvokeAsync<bool>("Reconnect", user.UserName, user.PassWord);
+        //    if (result) Debug.Log("尝试重连成功");
+        //    else
+        //    {
+        //        SceneManager.LoadScene("LoginSecen");
+        //        await DependencyResolver.Container.Resolve<GlobalUIService>().YNMessageBox("断开连接", "请尝试重新登陆");
+        //    }
+        //});
+        ////-------------------------
+        //DependencyResolver.Container.Resolve<HubConnection>().On("RepeatLogin",async () => 
+        //{
+        //    SceneManager.LoadScene("LoginSecen");
+        //    await DependencyResolver.Container.Resolve<GlobalUIService>().YNMessageBox("账号被其他人强制登陆", "账号被登陆,被挤下了线");
+        //});
         //在启动时就链接上服务器
     }
 }

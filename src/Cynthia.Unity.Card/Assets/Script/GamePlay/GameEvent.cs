@@ -6,9 +6,9 @@ using Autofac;
 using Cynthia.Card;
 using UnityEngine.EventSystems;
 using System.Linq;
-using Alsein.Utilities;
+using Alsein.Extensions;
 using System.Threading.Tasks;
-using Alsein.Utilities.IO;
+using Alsein.Extensions.IO;
 
 public class GameEvent : MonoBehaviour
 {
@@ -74,9 +74,9 @@ public class GameEvent : MonoBehaviour
     public GameObject CardPrefab;
     public GameObject NumberPrefab;
     //管道...
-    private IAsyncDataSender sender;
-    private IAsyncDataReceiver receiver;
-    private void Awake() => (sender, receiver) = AsyncDataEndPoint.CreateSimplex();
+    private ITubeInlet sender;
+    private ITubeOutlet receiver;
+    private void Awake() => (sender, receiver) = Tube.CreateSimplex();
     //状态信息
     //最开始
     private void Start()
