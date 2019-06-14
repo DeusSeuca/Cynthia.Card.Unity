@@ -29,7 +29,7 @@ namespace Cynthia.Card.Client
         //响应指令
         private bool ResponseOperation(Operation<ServerOperationType> operation)
         {
-            Debug.Log($"收到了指令{operation.OperationType}");
+            //Debug.Log($"收到了指令{operation.OperationType}");
             var arguments = operation.Arguments.ToArray();
             switch (operation.OperationType)
             {

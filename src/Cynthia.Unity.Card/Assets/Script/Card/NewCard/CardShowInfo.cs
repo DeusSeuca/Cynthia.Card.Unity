@@ -10,7 +10,8 @@ using DG.Tweening;
 public class CardShowInfo : MonoBehaviour
 {
     public CardMoveInfo CardMoveInfo;
-    public bool IsDead { get=>_isDead&&CardMoveInfo.IsTem; set=>value = _isDead; }
+    //?
+    public bool IsDead { get => _isDead || CardMoveInfo.IsTem; set => _isDead = value; }
     public bool _isDead = false;
     public CardStatus CurrentCore { get=>_currentCore; set
         {
@@ -190,6 +191,7 @@ public class CardShowInfo : MonoBehaviour
     public void ShowCardBreak(CardBreakEffectType type)
     {
         IsDead = true;
+        Debug.Log(IsDead);
         //GetComponent<Animator>().Play("DemoBreak");
         //CardMoveInfo.Destroy();
         DOTween.Sequence().Append(transform.DOScale(0,0.5f))

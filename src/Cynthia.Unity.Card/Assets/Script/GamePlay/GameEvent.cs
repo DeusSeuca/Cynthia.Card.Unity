@@ -50,7 +50,7 @@ public class GameEvent : MonoBehaviour
     private Transform _arrowTaget;
     public TempArrows TempArrows;
     //状态(类型)
-    public GameOperationType NowOperationType;//当前的√(有效
+    public GameOperationType NowOperationType { get; set; }//当前的√(有效
     //(选卡)
     public PlaceSelectCardsInfo SelectPlaceCardsInfo;//一些选择的信息√(有效
     public IList<CardLocation> NowSelectCards;//当前选择的卡牌
@@ -251,6 +251,7 @@ public class GameEvent : MonoBehaviour
                 if (SelectCard == null || !SelectCard.IsCanDrag || SelectCard.IsStay) return;
                 DragCard = SelectCard;
                 CurrentPlace = DragCard.CardUseInfo;
+                CloseAllRowMaxCanDrop();
                 SelectCard = null;
                 break;
             case GameOperationType.SelectCards:
@@ -329,7 +330,6 @@ public class GameEvent : MonoBehaviour
             case GameOperationType.SelectRow:
                 if(DropTaget!=null)
                 {
-                    Debug.Log(DropTaget.Id);
                     sender.SendAsync<RowPosition>(DropTaget.Id);
                 }
                 break;
@@ -862,6 +862,7 @@ public class GameEvent : MonoBehaviour
         //location 增加高光
         CurrentPlayCard = GetCard(location).CardShowInfo.CurrentCore;
         CurrentPlace = GetCard(location).CardUseInfo;
+        CloseAllRowMaxCanDrop();
         NowOperationType = GameOperationType.PlayCard;//放置牌模式
 
         //得到讯息
@@ -1044,6 +1045,15 @@ public class GameEvent : MonoBehaviour
         }
         AllCardsPosition.ForAll(x => x.SetAllCardGray(isGray));//将所有的卡牌灰化
     }
+
+    public void CloseAllRowMaxCanDrop()
+    {
+        for(var i = 0; i<AllCanDrop.Length;i++)
+        {
+            AllCanDrop[i].IfMaxDotDrop();
+        }
+    }
+
     //设定场上部分卡(灰不灰)
     public void PartCardGray(GameCardsPart part,bool isGray)
     {
@@ -1060,6 +1070,7 @@ public class GameEvent : MonoBehaviour
         }
         AllCardsPosition.ForAll(x =>x.SetPartCardGray(GetPartRow(part, x.Id), isGray));
     }
+
     //设定场上单卡(灰不灰)
     public void CardGray(CardLocation location,bool isGray)
     {
